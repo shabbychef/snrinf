@@ -41,7 +41,11 @@
 %\usepackage{datetime}
 %\usepackage{gitinfo2}
 % make that static for arxiv
-\providecommand{\gitHash}{c7df3f91a1f7a73174c91fc439acc30679dac39a}
+<<'githash',cache=FALSE>>=
+# https://stackoverflow.com/a/46377001/164611
+gitsha <- system("git rev-parse HEAD", intern=TRUE)
+@
+\providecommand{\gitHash}{\Sexpr{gitsha}}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -140,40 +144,9 @@ opts_chunk$set(fig.pos='h')
 options(width=64,digits=3)
 opts_chunk$set(size="small")
 opts_chunk$set(tidy=TRUE,tidy.opts=list(width.cutoff=50,keep.blank.line=TRUE))
-
-compile.time <- Sys.time()
-
-# from the environment
-
-# only recompute if FORCE_RECOMPUTE=True w/out case match.
-FORCE_RECOMPUTE <- 
-	(toupper(Sys.getenv('FORCE_RECOMPUTE',unset='False')) == "TRUE")
-
-
-library(quantmod)
-options("getSymbols.warning4.0"=FALSE)
-
-library(SharpeR)
-
-gen_norm <- rnorm
-lseq <- function(from,to,length.out) { 
-	exp(seq(log(from),log(to),length.out = length.out))
-}
 @
 %UNFOLD
 
-<<'runtime', include=FALSE, warning=FALSE, message=FALSE, cache=TRUE>>=
-# compiler flags!
-
-# you can manipulate the 'runtime' by setting this variable.
-# by convention the value 1 should take the longest time,
-# while larger values should result in quicker execution
-# (for low fidelity simulations)
-# takes the value from the environment variable of the same name,
-# or 1 if missing.
-
-RUNTIME_PARAM <- max(1,as.numeric(Sys.getenv('RUNTIME_PARAM')),na.rm=TRUE)
-@
 <<'setup'>>=
 prty <- function(x,...) { prettyNum(x,big.mark=',',...) }
 # easier to define this.
@@ -661,6 +634,7 @@ suppressMessages({
   library(dplyr)
   library(tidyr)
   library(tibble)
+  library(SharpeR)
   library(future.apply)
 })
 
@@ -1145,7 +1119,6 @@ suppressMessages({
 	library(xts)
 	library(SharpeR)
 	library(aqfb.data)
-	library(xtable)
 })
 data(mff4)
 sdat <- mff4[,! colnames(mff4) %in% c("RF")]

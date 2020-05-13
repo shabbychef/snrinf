@@ -91,7 +91,15 @@
 %\usepackage{datetime}
 %\usepackage{gitinfo2}
 % make that static for arxiv
-\providecommand{\gitHash}{c7df3f91a1f7a73174c91fc439acc30679dac39a}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# https://stackoverflow.com/a/46377001/164611}
+\hlstd{gitsha} \hlkwb{<-} \hlkwd{system}\hlstd{(}\hlstr{"git rev-parse HEAD"}\hlstd{,} \hlkwc{intern}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\providecommand{\gitHash}{8cdbf52ec0761be8e9e71389a5d02db97d5d49e7}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -126,7 +134,6 @@
 
 
 %UNFOLD
-
 
 
     
@@ -872,7 +879,7 @@ We consider a portfolio constructed on the `Market', size (SMB), value (HML)
 and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
 with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
 The set consists of $\ssiz=1104\,\moto{}$ of data, from 
-Jan 1927 through Dec 2018. 
+1927 through 2018.917. 
 We observe $\ssrsqopt=0.098\,\moto{-1}$.
 %We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
 From this we compute $\delta_2 = 0.094\,\moto{-1}$.
