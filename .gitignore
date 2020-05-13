@@ -1,0 +1,11 @@
+snrinf.pdf
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+cache/
+arxiv.tgz
+nohup.out

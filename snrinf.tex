@@ -1,0 +1,907 @@
+\documentclass[10pt,a4paper,english]{article}\usepackage[]{graphicx}\usepackage[]{color}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+% now ignored, I think:
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Asymptotic Distribution of the Markowitz Portfolio}
+%\VignetteKeyword{Finance}
+%\VignetteKeyword{Markowitz}
+%\VignettePackage{MarkowitzR}
+
+% front matter%FOLDUP
+\usepackage[hyphens]{url}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% for therefore
+\usepackage{amssymb}
+% for theorems?
+\usepackage{amsthm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}{Example}[section]
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{caution}{Caution}
+\newtheorem*{note}{Note}
+
+% see http://tex.stackexchange.com/a/3034/2530
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage{hyperref}
+\usepackage[square,numbers]{natbib}
+%\usepackage[authoryear]{natbib}
+%\usepackage[iso]{datetime}
+%\usepackage{datetime}
+
+%%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
+%\usepackage{draftwatermark}
+%% V1 sent to Mortada.
+%% V2 on paper to JHZD.
+%% V3 sent to s.lee@BR 140826
+%\providecommand{\versnum}{V4}
+%\SetWatermarkText{DRAFT \versnum}
+%\SetWatermarkLightness{0.87}
+%\SetWatermarkScale{4.5}
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\chead{}
+%\rhead{}
+%\lhead{}
+%\rhead{\sc draft \versnum; do not distribute}
+%\rfoot{}
+
+%compactitem and such:
+\usepackage[newitem,newenum,increaseonly]{paralist}
+
+\makeatletter
+\makeatother
+
+%\input{sr_defs.tex}
+\usepackage[notheorems]{SharpeR}
+
+\providecommand{\sideWarning}[1][0.5]{\marginpar{\hfill\includegraphics[width=#1\marginparwidth]{warning}}}
+
+% knitr setup%FOLDUP
+
+
+%UNFOLD
+
+
+
+    
+% SYMPY preamble%FOLDUP
+    
+    %\usepackage{graphicx} % Used to insert images
+    %\usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{color} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    %\usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    %\usepackage[utf8]{inputenc} % Allow utf-8 characters in the tex document
+    %\usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+		\usepackage{fancyvrb} % verbatim replacement that allows latex
+    %\usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    %\usepackage{longtable} % longtable support required by pandoc >1.10
+    
+
+    
+    
+    \definecolor{orange}{cmyk}{0,0.4,0.8,0.2}
+    \definecolor{darkorange}{rgb}{.71,0.21,0.01}
+    \definecolor{darkgreen}{rgb}{.12,.54,.11}
+    \definecolor{myteal}{rgb}{.26, .44, .56}
+    \definecolor{gray}{gray}{0.45}
+    \definecolor{lightgray}{gray}{.95}
+    \definecolor{mediumgray}{gray}{.8}
+    \definecolor{inputbackground}{rgb}{.95, .95, .85}
+    \definecolor{outputbackground}{rgb}{.95, .95, .95}
+    \definecolor{traceback}{rgb}{1, .95, .95}
+    % ansi colors
+    \definecolor{red}{rgb}{.6,0,0}
+    \definecolor{green}{rgb}{0,.65,0}
+    \definecolor{brown}{rgb}{0.6,0.6,0}
+    \definecolor{blue}{rgb}{0,.145,.698}
+    \definecolor{purple}{rgb}{.698,.145,.698}
+    \definecolor{cyan}{rgb}{0,.698,.698}
+    \definecolor{lightgray}{gray}{0.5}
+    
+    % bright ansi colors
+    \definecolor{darkgray}{gray}{0.25}
+    \definecolor{lightred}{rgb}{1.0,0.39,0.28}
+    \definecolor{lightgreen}{rgb}{0.48,0.99,0.0}
+    \definecolor{lightblue}{rgb}{0.53,0.81,0.92}
+    \definecolor{lightpurple}{rgb}{0.87,0.63,0.87}
+    \definecolor{lightcyan}{rgb}{0.5,1.0,0.83}
+    
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    
+    %\DefineShortVerb[commandchars=\\\{\}]{\|}
+    %\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    %% Add ',fontsize=\small' for more characters per line
+    %\newenvironment{Shaded}{}{}
+    %\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    %\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    %\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    %\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    %\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    %\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    %\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    %\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    %\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    %\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    %\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    %\newcommand{\RegionMarkerTok}[1]{{#1}}
+    %\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    %\newcommand{\NormalTok}[1]{{#1}}
+    
+    %% Define a nice break command that doesn't care if a line doesn't already
+    %% exist.
+    %\def\br{\hspace*{\fill} \\* }
+    %% Math Jax compatability definitions
+    %\def\gt{>}
+    %\def\lt{<}
+    
+
+    %% Pygments definitions
+    
+%\makeatletter
+%\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    %\let\PY@ul=\relax \let\PY@tc=\relax%
+    %\let\PY@bc=\relax \let\PY@ff=\relax}
+%\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+%\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    %\PY@tok{#1}\expandafter\PY@toks\fi}
+%\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    %\PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+%\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+%\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+%\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+%\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+%\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+%\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+%\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+%\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+%\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+%\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+%\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+%\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+%\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+%\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+%\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+%\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+%\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+%\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+%\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+%\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+%\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+%\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+%\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+%\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+%\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+%\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+%\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+%\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+%\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+%\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+%\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+%\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+%\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+%\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+%\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+%\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+%\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+%\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+%\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+%\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+%\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+%\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+%\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+%\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+%\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+%\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+
+%\def\PYZbs{\char`\\}
+%\def\PYZus{\char`\_}
+%\def\PYZob{\char`\{}
+%\def\PYZcb{\char`\}}
+%\def\PYZca{\char`\^}
+%\def\PYZam{\char`\&}
+%\def\PYZlt{\char`\<}
+%\def\PYZgt{\char`\>}
+%\def\PYZsh{\char`\#}
+%\def\PYZpc{\char`\%}
+%\def\PYZdl{\char`\$}
+%\def\PYZhy{\char`\-}
+%\def\PYZsq{\char`\'}
+%\def\PYZdq{\char`\"}
+%\def\PYZti{\char`\~}
+%% for compatibility with earlier versions
+%\def\PYZat{@}
+%\def\PYZlb{[}
+%\def\PYZrb{]}
+%\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=blue,
+      linkcolor=darkorange,
+      citecolor=darkgreen,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    %\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    %UNFOLD
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% commands specific to this paper:%FOLDUP
+\providecommand{\cono}[1][\typeI]{\mathSUB{c}{#1}}
+\providecommand{\pqlUL}[3]{\funcitUL{q}{#1}{#2}{#3}}
+\providecommand{\pql}[1]{\pqlUL{}{}{#1}}
+%\providecommand{\pqlsq}[1]{\pqlUL{2}{}{#1}}
+\providecommand{\dftwo}{\ssiz-\nstrat}
+
+%\providecommand{\pQlUL}[3]{\funcitUL{Q}{#1}{#2}{#3}}
+%\providecommand{\pQl}[1]{\pQlUL{}{}{#1}}
+%\providecommand{\pQlsq}[1]{\pQlUL{2}{}{#1}}
+
+%\providecommand{\qlev}[1][{}]{\MATHIT{s}}
+%\providecommand{\qtl}[1]{\mathUL{q}{}{#1}}
+%\providecommand{\qbnd}[1][{}]{\mathUL{B}{}{#1}}
+
+%\providecommand{\prvcsym}{c}
+%\providecommand{\cfncUL}[3]{\funcitUL{\prvcsym}{#1}{#2}{#3}}
+%\providecommand{\cfnc}[2][{\ssiz}]{\cfncUL{}{#1}{#2}}
+%\providecommand{\csqfnc}[2][{\ssiz}]{\cfncUL{2}{#1}{#2}}
+%\providecommand{\cfncp}[2][{\ssiz}]{\cfncUL{\prime}{#1}{#2}}
+
+%\providecommand{\prvssym}{s}
+%\providecommand{\sfncUL}[3]{\funcitUL{\prvssym}{#1}{#2}{#3}}
+%\providecommand{\sfnc}[2][{\ssiz}]{\sfncUL{}{#1}{#2}}
+%\providecommand{\csqfnc}[2][{\ssiz}]{\sfncUL{2}{#1}{#2}}
+%\providecommand{\sfncp}[2][{\ssiz}]{\sfncUL{\prime}{#1}{#2}}
+
+%\providecommand{\prvfsym}{f}
+%\providecommand{\ffncUL}[3]{\funcitUL{\prvfsym}{#1}{#2}{#3}}
+%\providecommand{\ffnc}[2][{\ssiz}]{\ffncUL{}{#1}{#2}}
+%\providecommand{\fsqfnc}[2][{\ssiz}]{\ffncUL{2}{#1}{#2}}
+%\providecommand{\ffncp}[2][{\ssiz}]{\ffncUL{\prime}{#1}{#2}}
+
+%% bias
+%\providecommand{\prvbterm}[3]{\funcitUL{\vect{b}}{#1}{#2}{#3}}
+%\providecommand{\buterm}[1][{}]{\prvbterm{#1}{\ssiz}{\pvmu, \pvsig}}
+%\providecommand{\bterm}{\buterm[{}]}
+%\providecommand{\bsqterm}{\buterm[\trsym]\buterm}
+
+%% conditional bias
+%\providecommand{\prvBterm}[3]{\funcitUL{\vect{B}}{#1}{#2}{#3}}
+%\providecommand{\Buterm}[1][{}]{\prvBterm{#1}{\ssiz}{\pvmu, \pvsig, \pfacsig}}
+%\providecommand{\Bterm}{\Buterm[{}]}
+%\providecommand{\Bsqterm}{\Buterm[\trsym]\Buterm}
+
+%\providecommand{\sphere}[1]{\mathUL{\mathcal{S}}{#1}{}}
+%\providecommand{\spherep}{\sphere{\nlatf - 1}}
+%\providecommand{\fnorm}[1]{\funcitUL{f}{}{\mathcal{S}}{#1}}
+%\providecommand{\sportwfnc}[1]{\funcit{\sportw}{#1}}
+
+%\providecommand{\sportWfnc}[1]{\funcit{\sportW}{#1}}
+
+%\providecommand{\spang}{\MATHIT{\theta}}
+%\providecommand{\spangfnc}[1]{\funcit{\spang}{#1}}
+%\providecommand{\spperp}{\mathUL{\pportw}{}{\bottom}}
+%\providecommand{\spperpfnc}[1]{\funcitUL{\pportw}{}{\bottom}{#1}}
+
+%%\providecommand{\prskvecU}[1]{\vectUL{\eta}{#1}{*}}
+%\providecommand{\prskvecU}[1]{\vectUL{\eta}{#1}{}}
+%\providecommand{\prskvec}{\prskvecU{}}
+%\providecommand{\gramprskvec}{\prskvecU{\trsym}\prskvec}
+%\providecommand{\ogramprskvec}{\prskvec\prskvecU{\trsym}}
+%\providecommand{\Drv}{\Mtx{D}}
+
+%\providecommand{\prskMtxU}[1]{\MtxUL{H}{#1}{}}
+%\providecommand{\prskMtx}{\prskMtxU{}}
+%\providecommand{\gramprskMtx}{\prskMtxU{\trsym}\prskMtx}
+
+%\providecommand{\zvc}{\vect{z}}
+%\providecommand{\farcsin}[1]{\funcit{\arcsin}{#1}}
+%\providecommand{\farccos}[1]{\funcit{\arccos}{#1}}
+%\providecommand{\farctan}[1]{\funcit{\arctan}{#1}}
+%\providecommand{\farctanh}[1]{\funcitUL{\tanh}{-1}{}{#1}}
+
+%\providecommand{\zzvc}{\vect{z}}
+%\providecommand{\Cmat}{\Mtx{C}}
+%\providecommand{\Vmat}{\Mtx{V}}
+%\providecommand{\Jmat}{\Mtx{J}}
+%\providecommand{\Qmat}{\Mtx{Q}}
+%\providecommand{\scoro}[2]{\gradof[{#1}]{\log #2}}
+
+%%\providecommand{\txtQual}{quality\xspace}
+%\providecommand{\txtQual}{\txtSNR}
+%\providecommand{\txtKS}{Kolmogorov-Smirnov\xspace}
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% document incantations%FOLDUP
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Inference on Achieved Signal Noise Ratio}
+\author{Steven E. Pav \thanks{\email{steven@gilgamath.com}}}
+%The code to build this document is available at
+%\href{http://www.github.com/shabbychef/qbound}{\normalfont\texttt{www.github.com/shabbychef/qbound}}.
+%\date{\today, \currenttime}
+
+\maketitle
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}%FOLDUP
+We describe a procedure to perform approximate infernece on the
+acheived signal-noise ratio of the \txtMP under Gaussian \iid returns.
+The procedure relies on a statistic similar to the Sharpe Ratio Information
+Criterion. \cite{doi:10.1080/14697688.2020.1718746}
+Testing indicates the procedure is somewhat conservative, but
+otherwise works well for reasonable values of sample and asset universe sizes.
+%We adapt the procedure to deal with generalizations of the portfolio optimization problem.
+\end{abstract}%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}%FOLDUP
+
+For a universe of \nstrat assets, 
+we consider the portfolio optimization problem
+\begin{equation}
+\max_{\pportw }
+\frac{\trAB{\pportw}{\pvmu}}{\sqrt{\qform{\pvsig}{\pportw}}}.
+\label{eqn:opt_port_I}
+\end{equation}
+Here \pvmu is the expected return and \pvsig is the covariance of returns.
+This problem is solved by the \txtMP, defined as 
+\begin{equation}
+\pportwopt \defeq \minvAB{\pvsig}{\pvmu},
+\end{equation}
+and any positive multiple thereof.
+
+In practice the parameters \pvmu and \pvsig are unknown and must be estimated from the data. 
+The estimation of parameters is known to deterioriate the quality of the
+portfolio.  \cite{michaud1989markowitz}
+The \txtSNR of the \txtMP, its mean divided by its volatility, is subject to a 
+fundamental bound. \cite{pav2014qbounds,ao2017solving}
+While inference on the population parameters follows from classical statistics
+via the connection to Hotelling's $T^2$, little is known about performing
+inference on the \txtSNR achieved by the \txtMP.
+Paulsen and S\"{o}hl described the \emph{Sharpe Ratio Information Criterion} (SRIC), 
+which is an approximately unbiased estimator for this quantity.  \cite{doi:10.1080/14697688.2020.1718746}
+Some asymptotic confidence intervals have also been described, but these
+require unreasonably large sample sizes. \cite{pav2013markowitz}
+Here we fill this gap, describing confidence intervals very similar
+to the SRIC and using the same approximation.
+Practical construction of these bounds requires one to estimate the population
+effect size.
+In practice this causes the confidence intervals to be slightly conservative.
+%Finally we expand the procedure to perform inference under hedging constraints.
+
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Procedure}%FOLDUP
+
+Assume you observe returns on \nstrat assets, 
+which are independently drawn from a Gaussian distribution
+$\reti[t]\sim\normlaw{\pvmu,\pvsig}$.
+The population \txtMP is $\pportwopt=\minv{\pvsig}\pvmu$.
+The \txtSNR of this portfolio is $\psnropt=\sqrt{\qiform{\pvsig}{\pvmu}}$.
+Given \ssiz observations of returns, 
+one typically estimates the population parameters via
+\begin{align}
+ \svmu &= \oneby{\ssiz} \sum_{1\le t \le \ssiz} \reti[t],\\
+ \svsig &= \oneby{\ssiz-1} \sum_{1\le t \le \ssiz} \reti[t]\tr{\reti[t]} -
+  \frac{\ssiz}{\ssiz-1}\svmu\tr{\svmu}.
+\end{align}
+The (sample) \txtMP is $\sportwopt=\minv{\svsig}\svmu$.
+The \txtASNR of \sportwopt is defined as
+\begin{equation}
+  \psnr[a] \defeq \frac{\tr{\pvmu}\sportwopt}{\sqrt{\qform{\pvsig}{\sportwopt}}}.
+\end{equation}
+It is an unobservable random quantity that we wish to perform inference on.
+
+The \txtSR of \sportwopt is defined as
+\begin{equation}
+  \ssropt \defeq \frac{\tr{\svmu}\sportwopt}{\sqrt{\qform{\svsig}{\sportwopt}}}
+  = \sqrt{\qiform{\svsig}{\svmu}}.
+\end{equation}
+We note that $T^2=\ssiz\ssrsqopt$ is the familiar Hotelling's statistic,
+which is usually prescribed to perform inference on \pvmu, but
+can be used to perform inference on \psnrsqopt.
+\cite{anderson2003introduction,pav_the_book}
+
+The Sharpe Ratio Information Criterion is defined as 
+\cite{doi:10.1080/14697688.2020.1718746}
+\begin{equation}
+  SRIC \defeq \ssropt - \frac{\nstrat-1}{\ssiz\ssropt}.
+\end{equation}
+Under the simplifying approximation
+\begin{equation}
+\label{apx:perfect_cov}
+\svsig \approx \pvsig,
+\end{equation}
+the SRIC is unbiased for the \txtASNR:
+\begin{equation}
+\E{SRIC} = \E{\psnr[a]}.
+\label{eqn:sric_raison_detre}
+\end{equation}
+Note this only holds for $\nstrat > 1$, but it is simple to express
+$\E{\psnr[a]}$ when $\nstrat=1$.
+
+Inspired by the SRIC, we seek a constant $\cono[{\typeI}]$ such that
+\begin{equation}
+  \Pr{\psnr[a] \le \ssropt - \frac{\cono[{\typeI}]}{\ssiz\ssropt}} = \typeI.
+  \label{eqn:psnr_ci_bound}
+\end{equation}
+%\label{eqn:asnr_ci}
+%\Pr{\ssropt - \frac{\chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\psnrsqopt}{4}} - \frac{\ssiz\psnrsqopt}{4}}{\ssiz\ssropt} \ge \pql{\sportwopt}} = \typeI.
+Again we assume \apxref{perfect_cov}.
+Under this approximation,
+\begin{equation}
+  \psnr[a] 
+  = \frac{\tr{\pvmu}\minv{\pvsig}\svmu}{\sqrt{\qform{\pvsig}{\wrapParens{\minv{\pvsig}\svmu}}}}
+  = \frac{\tr{\pvmu}\minv{\pvsig}\svmu}{\sqrt{\qiform{\pvsig}{\svmu}}}
+  = \frac{\tr{\pvmu}\minv{\pvsig}\svmu}{\ssropt}.
+\end{equation}
+Now we note that for Gaussian returns,
+\begin{equation*}
+  %\svmu = \pvmu + \oneby{\sqrt{\ssiz}}\chol{\pvsig}\vect{z},
+  \svmu \sim \normlaw{\pvmu,\oneby{\ssiz}\pvsig}.
+\end{equation*}
+Thus $\ichol{\pvsig}\svmu \sim
+\normlaw{\ichol{\pvsig}\pvmu,\oneby{\ssiz}\eye},$ where $\ichol{\pvsig}$ is the
+inverse of the (symmetric) square root of \pvsig.
+Note that $\norm{\ichol{\pvsig}\pvmu}=\psnropt$.
+
+Now take \Mtx{P} to be a orthogonal matrix that rotates $\ichol{\pvsig}\pvmu$
+onto $\psnropt\basev[1]$.
+Then $\Mtx{P}\ichol{\pvsig}\svmu\sim\normlaw{\psnropt\basev[1],\oneby{\ssiz}\eye}$.
+Thus
+\begin{align*}
+\tr{\pvmu}\minv{\pvsig}\svmu 
+&= \tr{\pvmu}\trichol{\pvsig}\tr{\Mtx{P}}\Mtx{P}\ichol{\pvsig}\svmu
+= \psnropt\trbasev[1]\Mtx{P}\ichol{\pvsig}\svmu
+\sim 
+  \frac{\psnropt}{\sqrt{\ssiz}}\wrapParens{\sqrt{\ssiz}\psnropt + z_1},\\
+  %\psnrsqopt + \frac{\psnropt}{\sqrt{\ssiz}}z_1,\\  %\normlaw{\psnrsqopt,\frac{\psnrsqopt}{\ssiz}}.
+  \qiform{\pvsig}{\svmu} 
+&= \tr{\svmu}\trichol{\pvsig}\tr{\Mtx{P}}\Mtx{P}\ichol{\pvsig}\svmu
+  \sim \oneby{\ssiz}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 + \oneby{\ssiz}\sum_{2 \le i \le \nstrat}z_i^2,
+\end{align*}
+where the $z_i$ are independent standard Gaussians.
+
+Then we have
+\begin{align*}
+  \psnr[a] \le \ssropt - \frac{c}{\ssiz\ssropt} 
+  &\Leftrightarrow \psnr[a]\ssropt \le \ssrsqopt - \frac{c}{\ssiz},\\
+  &\Leftrightarrow \tr{\pvmu}\minv{\pvsig}\svmu \le \qiform{\pvsig}{\svmu} - \frac{c}{\ssiz},\\
+  &\Leftrightarrow 
+  \frac{\psnropt}{\sqrt{\ssiz}}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}
+  \le 
+  \oneby{\ssiz}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 +
+  \oneby{\ssiz}\sum_{2 \le i \le \nstrat}z_i^2 - \frac{c}{\ssiz},\\
+  &\Leftrightarrow 
+  c \le 
+  \wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 
+  -\sqrt{\ssiz}\psnropt\wrapParens{\sqrt{\ssiz}\psnropt + z_1}
+  + \sum_{2 \le i \le \nstrat}z_i^2,\\
+  &\Leftrightarrow 
+  c \le 
+  \wrapParens{\frac{\sqrt{\ssiz}\psnropt}{2} + z_1}^2 
+  -\frac{\ssiz\psnrsqopt}{4} 
+  + \sum_{2 \le i \le \nstrat}z_i^2.
+\end{align*}
+If we want this condition to hold with probability \typeI we should set
+\begin{equation}
+\cono[\typeI] = {\chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\psnrsqopt}{4}} -
+\frac{\ssiz\psnrsqopt}{4}},
+\end{equation}
+where \chisqqnt{q}{\df,\nctp} is the $q$ quantile of the non-central chi-square distribution
+with \df degrees of freedom and non-centrality parameter \nctp.
+
+\paragraph{Checking Coverage}
+
+%\begin{example}[CI Coverage]%FOLDUP
+%\label{example:b9d63112-6dd5-487e-8734-d17bc26740f9}
+% from my blog post gilgamath/bad-ci
+
+Before proceeding, we check whether use of 
+\label{apx:perfect_cov}
+leads to a degradation in coverage of a confidence interval implied by \ineqnref{psnr_ci_bound}.
+We draw \ssiz days of returns from the $\nstrat$-variate normal distribution.
+For a fixed value of \psnropt, we perform 
+$100000$ simulations of computing $\psnr[a]$ and \ssrsqopt, computing a
+one-sided confidence bound and measuring the empirical rate of type I errors.
+We then let \ssiz vary from 50 to $102,400$ days; 
+we let \nstrat vary from 2 to 16;
+we let \psnropt vary from $0.5\,\yrtomhalf$ to $2\,\yrtomhalf$, where we assume
+252 days per year. 
+We compute the lower confidence limit on $\psnr[a]$ using knowledge of the
+actual \psnropt to construct \cono[\typeI].
+For practical inference this would
+have to be estimated, but here we are only testing conditions for which the 
+approximation $\svsig\approx\pvsig$ is close enough for purposes of inference.
+
+%For $\kurty=1$, we draw from a multivariate normal; for 
+%$\kurty > 1$, we draw from a multivariate shifted $t$ distribution.
+%
+
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfbadci_ci_plots-1} \caption[The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nstrat. Type I rates are plotted versus $\ssiz/\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. }\label{fig:badci_ci_plots}
+\end{figure}
+
+
+\end{knitrout}
+In \figref{badci_ci_plots} we plot the empirical type I rate at the nominal
+0.05 level of the confidence bound. 
+The main takeaway from this experiment is that the bound gives near-nominal
+coverage when $\ssiz \ge 100\nstrat$ or so.
+%The `difference' bound takes the form $\ssropt - c$,
+%while the `product' form is $c\ssropt$. 
+%The `TAS' bound is built on the \fntas{x} function of \eqnref{def_fntas}.
+%The `SRIC' bound is the one given in \eqnref{asnr_ci}.
+%We restrict the $y$ axis to an area around the nominal rate to show detail,
+%which causes some of the lines to entirely fall off the plot.
+%The main takeaways from this experiment are that the SRIC bound 
+%performs much better than the asymptotic bounds, giving near-nominal
+%coverage for much of the parameter space considered here, 
+%and that the approximation required for the SRIC bound does not seem
+%to cause issues except when $\ssiz \le 100\nstrat$ or so.
+%\end{example}%UNFOLD
+
+% cf my diary file from which has some stuff on this.
+% * Mon May 13 2019 09:14:11 PM Steven E. Pav steven@gilgamath.com 
+
+\subsection{Practical Inference}
+
+One can construct one- or two-sided confidence intervals from \ineqnref{psnr_ci_bound} when \psnropt is known.
+However, it is unknown in practice, and the constant $\cono[\typeI]$ is sufficiently sensitive to it.
+To practically perform inference, there are two obvious routes: one is to
+jointly perform inference on \psnropt on \psnr[a]; 
+the other is to estimate \psnropt and plug it in when constructing \cono[\typeI].
+
+For the joint estimation procedure, for some $q \in \oointerval{0}{1}$,
+construct a $q \typeI$ upper bound on \psnropt.
+That confidence bound can be described implicitly via the connection 
+to the non-central \flaw{} distribution:
+to find the one-sided confidence intervals $\ccinterval{0}{\psnr[u]}$ with
+coverage $1-q\typeI$, find
+\begin{equation}
+\psnr[u] = \min \setwo{z}{z \ge 0,\,\,\typeI/2 \ge \ncfcdf{\wrapNeParens{\frac{\ssiz (\ssiz-\nstrat)}{\nstrat (\ssiz - 1)}}\ssrsqopt}{\nstrat,\ssiz - \nstrat}{\ssiz z^2}},
+%\typeI/2 = \ncfcdf{\wrapNeParens{\frac{\ssiz (\ssiz-\nstrat)}{\nstrat (\ssiz - 1)}}\ssrsqopt}{\nstrat,\ssiz - \nstrat}{\ssiz\psnr[u]^2},
+%\label{eqn:optsnrcis_I}
+\end{equation}
+where $\ncfcdf{x}{\nctdf[1],\nctdf[2]}{\ncfp}$ is the CDF of the non-central
+\flaw{}-distribution with 
+non-centrality parameter \ncfp and $\nctdf[1]$ and $\nctdf[2]$ degrees of freedom.
+This method requires computational inversion of the CDF function. 
+Then compute
+$$
+c = \max \wrapBraces{\left. \chisqqnt{1-\wrapNeParens{1-q}\typeI}{\nstrat,
+\frac{\ssiz\psnr^2}{4}} - \frac{\ssiz\psnr^2}{4} \right|  0 \le \psnr[u]}.
+$$
+The bound $\ssropt - \frac{c}{\ssiz\ssropt}$ then should
+have type I rate at most \typeI.
+However, since this is a joint confidence bound the bound on \psnr[a] will be
+somewhat conservative.
+
+Another approach, which does not have guaranteed coverage, is to
+estimate \psnropt from the data, and plug in that value in the computation of
+\cono[\typeI].
+We can perform this estimation using standard techniques, 
+again via the connection of Hotelling's $T^2$ to the \flaw{} distribution.
+Kubokawa, Robert and Saleh described improved methods for estimating
+the non-centrality parameter given an observation of a non-central
+\flaw{} statistic. \cite{kubokawa1993estimation}.
+They described the following estimators for the non-centrality parameter,
+which is \psnrsqopt in our case:
+\begin{equation}
+\label{eqn:KRS_estimators}
+\begin{split}
+	\delta_0 &= \frac{\wrapParens{\dftwo-2}}{\ssiz-1}\ssrsqopt - \frac{\nstrat}{\ssiz},\\
+	\delta_1 &= \fmax{\delta_0,0},\\
+	\delta_2 &= \fmax{\delta_0,\frac{2}{\nstrat+2}\wrapParens{\delta_0 + \frac{\nstrat}{\ssiz}}}.
+\end{split}
+\end{equation}
+They note that $\delta_0$ is the Uniform Minimum Variance Unbiased Estimator (UMVUE) of \psnrsqopt.
+However, it can be negative.
+The estimators $\delta_1, \delta_2$ are non-negative, and dominate $\delta_0$ in having
+lower expected squared error.
+Thus the suggested procedure is to compute
+$$
+c = \chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\delta_2}{4}} - \frac{\ssiz\delta_2}{4},
+$$
+then use the bound $\ssropt - \frac{c}{\ssiz\ssropt}$.
+In practice this bound seems to give slightly less conservative coverage than
+the joint bound described above.
+It is not clear how to find a coverage guarantee for this bound.
+The quantities \ssrsqopt and \psnr[a] are not independent, 
+and their asymptotic correlation is $\bigo{\ssiz^{-\halff}}$, which is only slowly shrinking. \cite{pav2013markowitz}
+
+%\begin{example}[Feasible CI Coverage]%FOLDUP
+\paragraph{Feasible CI Coverage}
+%\label{example:64cb27b2-e7d9-4e38-968e-0d6cbf4a2f63}
+
+We reconsider the experiments above %of \exampleref{b9d63112-6dd5-487e-8734-d17bc26740f9},
+but compute feasible confidence bounds.
+We use both the simultaneous CI approach with $q=0.25$; 
+and plug in $\psnropt=\sqrt{\delta_2}$ to construct the bound.
+In \figref{feasible_ci_plots}, we plot the empirical type I rate for both of these bounds
+versus \ssiz, with facets for \psnropt and \nstrat.
+We see that the $\delta_2$ plug-in estimator has coverage closer to the nominal $0.05$ rate.
+Both bounds have issues when $\ssiz/\nstrat$ is not sufficiently large, a problem stemming
+from the poor quality of the approximation $\svsig\approx\svsig$, and which was seen
+above.
+However, here we see closer to nominal coverage for larger \nstrat for both methods.
+It is not clear how the coverage will behave for larger $\ssiz/\nstrat$, though
+that seems like an unlikely problem in practice.
+%in the previous example.
+%
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_ci_plots-1} \caption[The empirical type I rate, over 100,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 100,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nlatf. The $y$ axis is drawn in square root scale to show detail. }\label{fig:feasible_ci_plots}
+\end{figure}
+
+
+\end{knitrout}
+%\end{example}%UNFOLD
+
+%\subsection{Hedged Portfolios}%FOLDUP
+
+%Now we generalize the portfolio problem of \eqnref{opt_port_I} to add a hedging constraint.
+%So consider the constrained portfolio optimization problem on \nstrat assets,
+%%\begin{empheq}[box={\eqnbox[10pt][10pt]}]{equation}
+%\begin{equation}
+  %\max_{\substack{\hejG\pvsig \pportw = \vzero,\\ \qform{\pvsig}{\pportw} \le \Rbuj^2}}
+%\frac{\trAB{\pportw}{\pvmu} - \rfr}{\sqrt{\qform{\pvsig}{\pportw}}},
+%\label{eqn:opt_port_hedge}
+%\end{equation}
+%%\end{empheq}
+%where $\hejG$ is an $\nstrathej \times \nstrat$ matrix of rank \nstrathej, and,
+%as previously, \pvmu, \pvsig are the mean vector and covariance matrix, 
+%\rfr is the risk-free rate, and $\Rbuj > 0$ is a risk `budget'. 
+%We can interpret
+%the \hejG constraint as stating that the covariance of the returns of
+%a feasible portfolio with the returns of a portfolio whose weights are in
+%a given row of \hejG shall equal zero. %the corresponding element of \hejg.
+%In the garden variety application of this problem, \hejG consists of 
+%\nstrathej rows of the identity matrix; %, and \hejg is the zero vector;
+%in this case, feasible portfolios are \emph{hedged} with respect 
+%to the \nstrathej assets selected by \hejG
+%(although they may hold some position in the hedged assets).
+%We use ``hedged'' to mean a portfolio with some fixed covariance (typically zero)
+%against some other portfolio(s).
+%%\index{portfolio constraints!hedging!definition|textbf}
+
+%Assuming that
+%the \hejG constraint and risk budget can be simultaneously satisfied,
+%the solution to this problem, via the Lagrange multiplier technique,
+%is
+%%\begin{equation}
+	%%\label{eqn:opt_port_solve_hedge}
+	%%\begin{split}
+	%%\pportwopt &= c\wrapParens{\minv{\pvsig}{\pvmu} -
+	%%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejG}\pvmu} +
+	%%\tr{\hejG}{\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}}\hejg,\,\\
+		%%\mbox{where } c^2 &= \frac{\Rbuj^2 - \qform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejg}}{
+	%%\qiform{\pvsig}{\pvmu} -
+	%%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}},
+	%%\end{split}
+%%\end{equation}
+%%where the numerator in the last equation must be positive for the problem
+%%to be feasible.
+%%The case where $\hejg \ne 0$ is `pathological', as it requires a fixed
+%%non-zero covariance of the target portfolio with some other portfolio's
+%%returns. 
+%%Setting $\hejg = 0$ ensures the problem is feasible, and
+%%we will make this assumption hereafter. 
+%%Under this assumption, the optimal
+%%portfolio is 
+%\begin{equation*}
+%\pportwopt 
+%= c \wrapParens{\minv{\pvsig}{\pvmu} -
+	%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejG}\pvmu}.
+%%= c_1 \pportwoptG{\eye} - c_2 \pportwoptG{\hejG},
+%\end{equation*}
+%%using the notation from \eqnref{opt_port_solve_cons_I}.
+%%The constants $c_1, c_2$ adjust for the risk budget.
+%%\subsecref{basic_conpo}.
+%Note that, up to scaling, $\minv{\pvsig}\pvmu$ is the unconstrained optimal
+%portfolio, and thus the imposition of the \hejG constraint only changes
+%the unconstrained portfolio in assets corresponding to columns of \hejG 
+%containing non-zero elements. In the garden variety application where
+%\hejG is a single row of the identity matrix, the imposition of the
+%constraint only changes the holdings in the asset to be hedged (modulo
+%changes in the leading constant to satisfy the risk budget).
+
+%The squared \txtSNR of the optimal portfolio is
+%\begin{equation}
+%\psnrsqopt
+%= \qiform{\pvsig}{\pvmu} -
+	%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}.
+%%= \psnrsqoptG{\eye} - \psnrsqoptG{\hejG},
+%\label{eqn:psnr_Gcons}
+%\end{equation}
+%%using the notation from 
+%%\eqnref{opt_port_snr_cons_I},
+%%%\subsecref{basic_conpo}, 
+%%and setting $\rfr=0$.
+%The sample optimal portfolio is given by 
+%\begin{equation*}
+	%\sportwoptHej{\hejG}
+%= c \wrapParens{\minv{\svsig}{\svmu} -
+	%\qiform{\wrapParens{\qoform{\svsig}{\hejG}}}{\hejG}\svmu}.
+%%= c_1 \sportwoptG{\eye} - c_2 \sportwoptG{\hejG},
+%\end{equation*}
+%The squared \txtSR of this portfolio is
+%\begin{equation}
+%\Hejssrsqopt{\hejG}
+%= \qiform{\svsig}{\svmu} -
+	%\qiform{\wrapParens{\qoform{\svsig}{\hejG}}}{\wrapParens{\hejG\svmu}}.
+%%= \ssrsqoptG{\eye} - \ssrsqoptG{\hejG},
+%\label{eqn:ssr_Gcons} 
+%\end{equation}
+
+%%\index{portfolio spanning}
+%%The quantity $\psnrsqopt$ in \eqnref{psnr_Gcons} is the
+%%drop in squared \txtSNR incurred by imposing the \hejG hedge constraint.
+%%This population quantity is the subject of inference
+%%in tests of \emph{portfolio spanning}.  \cite{KanZhou2012,HKspan1987}
+%%A spanning test considers whether the optimal portfolio on a 
+%%pre-fixed subset of \nstrathej assets has the same \txtSR as the
+%%optimal portfolio on all \nstrat assets, \ie whether those \nstrathej
+%%assets `span' the set of all assets.  We will consider those in the sequel.
+%%UNFOLD
+
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Examples}%FOLDUP
+
+
+%\begin{example}[Fama French Four Factors, Confidence Intervals]%FOLDUP
+%\index{Fama French 4 Factor returns}
+\paragraph{Fama French 4 Factor Returns}
+\label{example:3400185f-3864-4011-94df-5f756d81c044}
+
+We consider a portfolio constructed on the `Market', size (SMB), value (HML)
+and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
+with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
+The set consists of $\ssiz=1104\,\moto{}$ of data, from 
+Jan 1927 through Dec 2018. 
+We observe $\ssrsqopt=0.098\,\moto{-1}$.
+%We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
+From this we compute $\delta_2 = 0.094\,\moto{-1}$.
+Plugging in $\sqrt{\delta_2}$ for \psnropt 
+we compute a two-sided $95\%$ confidence bound on \psnr[a] as 
+$\ccinterval{0.234}{0.353}\,\moto{-\halff}$.
+By comparison, via the connection to the \flaw{} distribution,
+we compute $95\%$ confidence intervals on \psnropt as
+$\ccinterval{0.247}{0.369}\,\moto{-\halff}$.
+%\end{example}%UNFOLD
+
+
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}%FOLDUP
+
+Testing indicates the confidence bound exhibits closer to nominal
+coverage than the known asymptotic bounds for reasonable \ssiz and \nstrat.
+Further work should naturally focus on mitigating the effects of the
+approximation $\svsig\approx\pvsig$, and finding a coverage guarantee
+of the plug-in estimator. 
+We also anticipate that this confidence bound procedure can be adapted
+to deal with hedging constraints and conditional expectation models.
+
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% bibliography%FOLDUP
+\bibliographystyle{plainnat}
+%\bibliography{SharpeR}
+\bibliography{snrinf}
+%UNFOLD
+
+\end{document}
+%for vim modeline: (do not edit)
+% vim:fdm=marker:fmr=FOLDUP,UNFOLD:cms=%%s:syn=rnoweb:ft=rnoweb:et:nu:tw=131
