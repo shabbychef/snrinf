@@ -41,7 +41,7 @@
 %\usepackage{datetime}
 %\usepackage{gitinfo2}
 % make that static for arxiv
-<<'githash',cache=FALSE>>=
+<<'githash',cache=FALSE,include=FALSE,echo=FALSE,results='hide'>>=
 # https://stackoverflow.com/a/46377001/164611
 gitsha <- system("git rev-parse HEAD", intern=TRUE)
 @
