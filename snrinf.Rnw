@@ -39,7 +39,9 @@
 %\usepackage[authoryear]{natbib}
 %\usepackage[iso]{datetime}
 %\usepackage{datetime}
-\usepackage{gitinfo2}
+%\usepackage{gitinfo2}
+% make that static for arxiv
+\providecommand{\gitHash}{c7df3f91a1f7a73174c91fc439acc30679dac39a}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -481,8 +483,8 @@ This revision was built from commit \texttt{\gitHash} of that repo.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}%FOLDUP
-We describe a procedure to perform approximate infernece on the
-acheived signal-noise ratio of the \txtMP under Gaussian \iid returns.
+We describe a procedure to perform approximate inference on the
+achieved signal-noise ratio of the \txtMP under Gaussian \iid returns.
 The procedure relies on a statistic similar to the Sharpe Ratio Information
 Criterion. \cite{doi:10.1080/14697688.2020.1718746}
 Testing indicates the procedure is somewhat conservative, but
