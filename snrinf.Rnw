@@ -90,6 +90,8 @@ opts_knit$set(eval.after='fig.cap')
 #opts_chunk$set(results="asis")
 opts_chunk$set(results="hide")
 opts_chunk$set(cache=TRUE,cache.path="cache/snrinf")
+# for large cache
+opts_chunk$set(cache.lazy=FALSE)
 
 #opts_chunk$set(fig.path="figure/",dev=c("pdf","cairo_ps"))
 opts_chunk$set(fig.path="figure/snrinf",dev=c("pdf"))
@@ -678,7 +680,9 @@ params <- tidyr::crossing(tibble::tibble(n=round(100*2^(-1:10))),
 
 # this good?
 # 100K takes maybe 3 minutes?
-nrep <- 100000L
+# 250K takes 8 minutes on my 8 core desktop
+# 500K takes 15.5 minutes on my 8 core desktop
+nrep <- 1000000L
 
 plan(multiprocess)
 set.seed(2356)
@@ -793,6 +797,7 @@ ph <- cires %>%
        #color='CI Bound',shape='CI Bound',
        title='Coverage of CIs on achieved SNR of the Markowitz portfolio\nGaussian returns, using clairvoyance.')
 print(finish_plot(ph))
+rm(cires)
 @
 In \figref{badci_ci_plots} we plot the empirical type I rate at the nominal
 \Sexpr{typeI} level of the confidence bound. 
@@ -933,6 +938,7 @@ iry_bound <- function(ssrsqopts,ssiz,nstrat,alpha=0.05,q=0.5,type=c('delta','wor
   newfun <- approxfun(xlims,ylims)
   yout <- newfun(ssrsqopts)
 }
+
 #system.time({
   plan(multiprocess)
   # wow, slow.
@@ -946,6 +952,7 @@ iry_bound <- function(ssrsqopts,ssiz,nstrat,alpha=0.05,q=0.5,type=c('delta','wor
                 type1_wrs = mean(psnr < ci_wrs)) %>%
     ungroup() 
   plan(sequential)
+  rm(results)
 #})
 @
 We reconsider the experiments above %of \exampleref{b9d63112-6dd5-487e-8734-d17bc26740f9},

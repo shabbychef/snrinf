@@ -1,6 +1,6 @@
 \documentclass[10pt,a4paper,english]{article}\usepackage[]{graphicx}\usepackage[]{color}
-% maxwidth is the original width if it is less than linewidth
-% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
 \makeatletter
 \def\maxwidth{ %
   \ifdim\Gin@nat@width>\linewidth
@@ -92,7 +92,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{e0dc1a98a0054146130ad795b331a15d867e8e7e}
+\providecommand{\gitHash}{b34b5df1b0601e521b312a7dde5dd746e51e530f}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -613,7 +613,7 @@ Before proceeding, we check whether use of
 leads to a degradation in coverage of a confidence interval implied by \ineqnref{psnr_ci_bound}.
 We draw \ssiz days of returns from the $\nstrat$-variate normal distribution.
 For a fixed value of \psnropt, we perform 
-$100000$ simulations of computing $\psnr[a]$ and \ssrsqopt, computing a
+$1000000$ simulations of computing $\psnr[a]$ and \ssrsqopt, computing a
 one-sided confidence bound and measuring the empirical rate of type I errors.
 We then let \ssiz vary from 50 to $102,400$ days; 
 we let \nstrat vary from 2 to 16;
@@ -631,7 +631,7 @@ approximation $\svsig\approx\pvsig$ is close enough for purposes of inference.
 
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
-\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfbadci_ci_plots-1} \caption[The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nstrat. Type I rates are plotted versus $\ssiz/\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. }\label{fig:badci_ci_plots}
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfbadci_ci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nstrat. Type I rates are plotted versus $\ssiz/\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. }\label{fig:badci_ci_plots}
 \end{figure}
 
 
@@ -743,7 +743,7 @@ that seems like an unlikely problem in practice.
 %
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
-\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_ci_plots-1} \caption[The empirical type I rate, over 100,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 100,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nlatf. The $y$ axis is drawn in square root scale to show detail. }\label{fig:feasible_ci_plots}
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_ci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nlatf. The $y$ axis is drawn in square root scale to show detail. }\label{fig:feasible_ci_plots}
 \end{figure}
 
 
@@ -872,7 +872,7 @@ We consider a portfolio constructed on the `Market', size (SMB), value (HML)
 and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
 with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
 The set consists of $\ssiz=1104\,\moto{}$ of data, from 
-1927 through 2018.917. 
+Jan 1927 through Dec 2018. 
 We observe $\ssrsqopt=0.098\,\moto{-1}$.
 %We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
 From this we compute $\delta_2 = 0.094\,\moto{-1}$.
