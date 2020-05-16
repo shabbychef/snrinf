@@ -92,7 +92,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{b34b5df1b0601e521b312a7dde5dd746e51e530f}
+\providecommand{\gitHash}{89c44ee1fe5c13e0e3f791551f4e3ed469da404d}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -749,112 +749,123 @@ that seems like an unlikely problem in practice.
 \end{knitrout}
 %\end{example}%UNFOLD
 
-%\subsection{Hedged Portfolios}%FOLDUP
+\subsection{Hedged Portfolios}%FOLDUP
 
-%Now we generalize the portfolio problem of \eqnref{opt_port_I} to add a hedging constraint.
-%So consider the constrained portfolio optimization problem on \nstrat assets,
-%%\begin{empheq}[box={\eqnbox[10pt][10pt]}]{equation}
-%\begin{equation}
-  %\max_{\substack{\hejG\pvsig \pportw = \vzero,\\ \qform{\pvsig}{\pportw} \le \Rbuj^2}}
-%\frac{\trAB{\pportw}{\pvmu} - \rfr}{\sqrt{\qform{\pvsig}{\pportw}}},
-%\label{eqn:opt_port_hedge}
-%\end{equation}
-%%\end{empheq}
-%where $\hejG$ is an $\nstrathej \times \nstrat$ matrix of rank \nstrathej, and,
-%as previously, \pvmu, \pvsig are the mean vector and covariance matrix, 
-%\rfr is the risk-free rate, and $\Rbuj > 0$ is a risk `budget'. 
-%We can interpret
-%the \hejG constraint as stating that the covariance of the returns of
-%a feasible portfolio with the returns of a portfolio whose weights are in
-%a given row of \hejG shall equal zero. %the corresponding element of \hejg.
-%In the garden variety application of this problem, \hejG consists of 
-%\nstrathej rows of the identity matrix; %, and \hejg is the zero vector;
-%in this case, feasible portfolios are \emph{hedged} with respect 
-%to the \nstrathej assets selected by \hejG
-%(although they may hold some position in the hedged assets).
-%We use ``hedged'' to mean a portfolio with some fixed covariance (typically zero)
-%against some other portfolio(s).
-%%\index{portfolio constraints!hedging!definition|textbf}
+Now we generalize the portfolio problem of \eqnref{opt_port_I} to add a hedging constraint.
+So consider the constrained portfolio optimization problem on \nstrat assets,
+%\begin{empheq}[box={\eqnbox[10pt][10pt]}]{equation}
+\begin{equation}
+  \max_{\substack{\hejG\pvsig \pportw = \vzero,\\ \qform{\pvsig}{\pportw} \le \Rbuj^2}}
+\frac{\trAB{\pportw}{\pvmu} - \rfr}{\sqrt{\qform{\pvsig}{\pportw}}},
+\label{eqn:opt_port_hedge}
+\end{equation}
+%\end{empheq}
+where $\hejG$ is an $\nstrathej \times \nstrat$ matrix of rank \nstrathej, and,
+as previously, \pvmu, \pvsig are the mean vector and covariance matrix, 
+\rfr is the risk-free rate, and $\Rbuj > 0$ is a risk `budget'. 
+We can interpret
+the \hejG constraint as stating that the covariance of the returns of
+a feasible portfolio with the returns of a portfolio whose weights are in
+a given row of \hejG shall equal zero. %the corresponding element of \hejg.
+In the garden variety application of this problem, \hejG consists of 
+\nstrathej rows of the identity matrix; %, and \hejg is the zero vector;
+in this case, feasible portfolios are \emph{hedged} with respect 
+to the \nstrathej assets selected by \hejG
+(although they may hold some position in the hedged assets).
+We use ``hedged'' to mean a portfolio with zero covariance 
+against some other portfolio(s).
+%\index{portfolio constraints!hedging!definition|textbf}
 
+%% not a problem when the hejg is zero
 %Assuming that
 %the \hejG constraint and risk budget can be simultaneously satisfied,
-%the solution to this problem, via the Lagrange multiplier technique,
-%is
-%%\begin{equation}
-	%%\label{eqn:opt_port_solve_hedge}
-	%%\begin{split}
-	%%\pportwopt &= c\wrapParens{\minv{\pvsig}{\pvmu} -
-	%%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejG}\pvmu} +
-	%%\tr{\hejG}{\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}}\hejg,\,\\
-		%%\mbox{where } c^2 &= \frac{\Rbuj^2 - \qform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejg}}{
-	%%\qiform{\pvsig}{\pvmu} -
-	%%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}},
-	%%\end{split}
-%%\end{equation}
-%%where the numerator in the last equation must be positive for the problem
-%%to be feasible.
-%%The case where $\hejg \ne 0$ is `pathological', as it requires a fixed
-%%non-zero covariance of the target portfolio with some other portfolio's
-%%returns. 
-%%Setting $\hejg = 0$ ensures the problem is feasible, and
-%%we will make this assumption hereafter. 
-%%Under this assumption, the optimal
-%%portfolio is 
-%\begin{equation*}
-%\pportwopt 
-%= c \wrapParens{\minv{\pvsig}{\pvmu} -
-	%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejG}\pvmu}.
-%%= c_1 \pportwoptG{\eye} - c_2 \pportwoptG{\hejG},
-%\end{equation*}
-%%using the notation from \eqnref{opt_port_solve_cons_I}.
-%%The constants $c_1, c_2$ adjust for the risk budget.
-%%\subsecref{basic_conpo}.
-%Note that, up to scaling, $\minv{\pvsig}\pvmu$ is the unconstrained optimal
-%portfolio, and thus the imposition of the \hejG constraint only changes
-%the unconstrained portfolio in assets corresponding to columns of \hejG 
-%containing non-zero elements. In the garden variety application where
-%\hejG is a single row of the identity matrix, the imposition of the
-%constraint only changes the holdings in the asset to be hedged (modulo
-%changes in the leading constant to satisfy the risk budget).
-
-%The squared \txtSNR of the optimal portfolio is
+%the
+The
+solution to this problem, via the Lagrange multiplier technique,
+is
 %\begin{equation}
-%\psnrsqopt
-%= \qiform{\pvsig}{\pvmu} -
-	%\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}.
-%%= \psnrsqoptG{\eye} - \psnrsqoptG{\hejG},
-%\label{eqn:psnr_Gcons}
+  %\label{eqn:opt_port_solve_hedge}
+  %\begin{split}
+  %\pportwopt &= c\wrapParens{\minv{\pvsig}{\pvmu} -
+  %\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejG}\pvmu} +
+  %\tr{\hejG}{\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}}\hejg,\,\\
+    %\mbox{where } c^2 &= \frac{\Rbuj^2 - \qform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejg}}{
+  %\qiform{\pvsig}{\pvmu} -
+  %\qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}},
+  %\end{split}
 %\end{equation}
-%%using the notation from 
-%%\eqnref{opt_port_snr_cons_I},
-%%%\subsecref{basic_conpo}, 
-%%and setting $\rfr=0$.
-%The sample optimal portfolio is given by 
-%\begin{equation*}
-	%\sportwoptHej{\hejG}
-%= c \wrapParens{\minv{\svsig}{\svmu} -
-	%\qiform{\wrapParens{\qoform{\svsig}{\hejG}}}{\hejG}\svmu}.
-%%= c_1 \sportwoptG{\eye} - c_2 \sportwoptG{\hejG},
-%\end{equation*}
-%The squared \txtSR of this portfolio is
-%\begin{equation}
-%\Hejssrsqopt{\hejG}
-%= \qiform{\svsig}{\svmu} -
-	%\qiform{\wrapParens{\qoform{\svsig}{\hejG}}}{\wrapParens{\hejG\svmu}}.
-%%= \ssrsqoptG{\eye} - \ssrsqoptG{\hejG},
-%\label{eqn:ssr_Gcons} 
-%\end{equation}
+%where the numerator in the last equation must be positive for the problem
+%to be feasible.
+%The case where $\hejg \ne 0$ is `pathological', as it requires a fixed
+%non-zero covariance of the target portfolio with some other portfolio's
+%returns. 
+%Setting $\hejg = 0$ ensures the problem is feasible, and
+%we will make this assumption hereafter. 
+%Under this assumption, the optimal
+%portfolio is 
+\begin{equation*}
+\pportwopt 
+= c \wrapParens{\minv{\pvsig}{\pvmu} -
+  \qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejG}\pvmu}.
+%= c_1 \pportwoptG{\eye} - c_2 \pportwoptG{\hejG},
+\end{equation*}
+%using the notation from \eqnref{opt_port_solve_cons_I}.
+%The constants $c_1, c_2$ adjust for the risk budget.
+%\subsecref{basic_conpo}.
+Note that, up to scaling, $\minv{\pvsig}\pvmu$ is the unconstrained optimal
+portfolio, and thus the imposition of the \hejG constraint only changes
+the unconstrained portfolio in assets corresponding to columns of \hejG 
+containing non-zero elements. In the garden variety application where
+\hejG is a single row of the identity matrix, the imposition of the
+constraint only changes the holdings in the asset to be hedged (modulo
+changes in the leading constant to satisfy the risk budget).
 
-%%\index{portfolio spanning}
-%%The quantity $\psnrsqopt$ in \eqnref{psnr_Gcons} is the
-%%drop in squared \txtSNR incurred by imposing the \hejG hedge constraint.
-%%This population quantity is the subject of inference
-%%in tests of \emph{portfolio spanning}.  \cite{KanZhou2012,HKspan1987}
-%%A spanning test considers whether the optimal portfolio on a 
-%%pre-fixed subset of \nstrathej assets has the same \txtSR as the
-%%optimal portfolio on all \nstrat assets, \ie whether those \nstrathej
-%%assets `span' the set of all assets.  We will consider those in the sequel.
-%%UNFOLD
+%Without loss of generality we can assume that \hejG consists of some \nstrathej
+%distinct rows of the $\sbby{\nstrat}$ identity matrix.
+
+The squared \txtSNR of the optimal portfolio is
+\begin{equation}
+\psnrsqopt
+= \qiform{\pvsig}{\pvmu} -
+  \qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}.
+%= \psnrsqoptG{\eye} - \psnrsqoptG{\hejG},
+\label{eqn:psnr_Gcons}
+\end{equation}
+%using the notation from 
+%\eqnref{opt_port_snr_cons_I},
+%%\subsecref{basic_conpo}, 
+%and setting $\rfr=0$.
+The sample optimal portfolio is given by 
+\begin{equation*}
+  \sportwoptHej{\hejG}
+= c \wrapParens{\minv{\svsig}{\svmu} -
+  \qiform{\wrapParens{\qoform{\svsig}{\hejG}}}{\hejG}\svmu}.
+%= c_1 \sportwoptG{\eye} - c_2 \sportwoptG{\hejG},
+\end{equation*}
+The squared \txtSR of this portfolio is
+\begin{equation}
+\Hejssrsqopt{\hejG}
+= \qiform{\svsig}{\svmu} -
+  \qiform{\wrapParens{\qoform{\svsig}{\hejG}}}{\wrapParens{\hejG\svmu}}.
+%= \ssrsqoptG{\eye} - \ssrsqoptG{\hejG},
+\label{eqn:ssr_Gcons} 
+\end{equation}
+The \txtASNR of this portfolio is
+\begin{equation}
+  \psnr[a] = 
+  \frac{\tr{\pvmu}\sportwoptHej{\hejG}}{\sqrt{\qform{\pvsig}{\sportwoptHej{\hejG}}}}.
+\end{equation}
+
+%\index{portfolio spanning}
+%The quantity $\psnrsqopt$ in \eqnref{psnr_Gcons} is the
+%drop in squared \txtSNR incurred by imposing the \hejG hedge constraint.
+%This population quantity is the subject of inference
+%in tests of \emph{portfolio spanning}.  \cite{KanZhou2012,HKspan1987}
+%A spanning test considers whether the optimal portfolio on a 
+%pre-fixed subset of \nstrathej assets has the same \txtSR as the
+%optimal portfolio on all \nstrat assets, \ie whether those \nstrathej
+%assets `span' the set of all assets.  We will consider those in the sequel.
+%UNFOLD
 
 %UNFOLD
 
@@ -871,7 +882,7 @@ We consider a portfolio constructed on the `Market', size (SMB), value (HML)
 and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
 with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
 The set consists of $\ssiz=1104\,\moto{}$ of data, from 
-Jan 1927 through Dec 2018. 
+1927 through 2018.917. 
 We observe $\ssrsqopt=0.098\,\moto{-1}$.
 %We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
 From this we compute $\delta_2 = 0.094\,\moto{-1}$.
