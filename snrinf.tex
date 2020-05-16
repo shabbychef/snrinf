@@ -92,7 +92,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{55f8176fbc33bcf6b03f02174afb0d7e394105cf}
+\providecommand{\gitHash}{105f332ada88a24e28accc20e5821c0a2af5f26c}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -764,11 +764,10 @@ but compute feasible confidence bounds.
 We use both the simultaneous CI approach with $q=0.25$; 
 and plug in $\psnropt=\sqrt{\delta_2}$ to construct the bound.
 In \figref{feasible_ci_plots}, we plot the empirical type I rate for both of these bounds
-versus \ssiz, with facets for \psnropt and \nstrat.
+versus \ssiz, with facets for \psnropt.
 We see that the $\delta_2$ plug-in estimator has coverage closer to the nominal $0.05$ rate.
 Both bounds have issues when $\ssiz/\nstrat$ is not sufficiently large, a problem stemming
-from the poor quality of the approximation $\svsig\approx\svsig$, and which was seen
-above.
+from the poor quality of the approximation $\svsig\approx\svsig$, and which was seen above.
 However, here we see closer to nominal coverage for larger \nstrat for both methods.
 It is not clear how the coverage will behave for larger $\ssiz/\nstrat$, though
 that seems like an unlikely problem in practice.
@@ -1010,7 +1009,7 @@ to assess the effects of \apxref{perfect_cov}.
 In our simulations, we set $\nstrathej = \nstrat/2$, and let $\hejG$ be the first \nstrathej rows of the identity matrix.
 We set $\pvmu=c \vone$ and $\pvsig=\eye$.
 We perform $100,000$ simulations for different values of $\Hejpsnrsqopt{\hejG}$, $\nstrat$ and $\ssiz$,
-computing \psnr[a] for the hedged portfolio, as well as \Hejssrsqopt{\hejG}.
+computing \psnr[a] for the hedged portfolio, as well as \Hejssrsqopt{\hejG} and \ssrsqoptG{\hejG}.
 We compute the lower 0.05 bound using knowledge of \Hejpsnrsqopt{\hejG} and compute the empirical type I rate
 over the $100,000$ simulations, which we plot versus $\ssiz/\nstrat$ in \figref{hejci_plots}.
 Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\nstrat$ or so.
@@ -1018,11 +1017,30 @@ Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\n
 
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
-\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfhejci_plots-1} \caption[The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown more tk]{The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown more tk. }\label{fig:hejci_plots}
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfhejci_plots-1} \caption{The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for the hedged portfolio problem.  We set $\nstrathej=\nstrat/2$ and take $\pvmu\propto\vone$. The SNR in the facet titles refers to $\sqrt{\Hejpsnrsqopt{\hejG}}$. }\label{fig:hejci_plots}
 \end{figure}
 
 
 \end{knitrout}
+
+
+
+As above we analyze the data from the hedged experiments, but compute feasible confidence bounds.
+We use both the simultaneous CI approach with $q=0.25$; 
+and plug in $\Hejpsnrsqopt{\hejG}=\sqrt{\delta_2}$ to construct the bound.
+In \figref{feasible_hejci_plots}, we plot the empirical type I rate for both of these bounds
+versus \ssiz, with facets for \psnropt and \nstrat.
+Once again, the $\delta_2$ plug-in estimator has coverage closer to the nominal $0.05$ rate,
+and both bounds are anti-conservative when $\ssiz/\nstrat$ is not sufficiently large.
+%
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_hejci_plots-1} \caption[The empirical type I rate, over 100,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 100,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nlatf. The $y$ axis is drawn in square root scale to show detail. }\label{fig:feasible_hejci_plots}
+\end{figure}
+
+
+\end{knitrout}
+
 %UNFOLD
 
 %UNFOLD

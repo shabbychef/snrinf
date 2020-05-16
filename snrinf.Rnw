@@ -993,11 +993,10 @@ but compute feasible confidence bounds.
 We use both the simultaneous CI approach with $q=\Sexpr{qval}$; 
 and plug in $\psnropt=\sqrt{\delta_2}$ to construct the bound.
 In \figref{feasible_ci_plots}, we plot the empirical type I rate for both of these bounds
-versus \ssiz, with facets for \psnropt and \nstrat.
+versus \ssiz, with facets for \psnropt.
 We see that the $\delta_2$ plug-in estimator has coverage closer to the nominal $\Sexpr{typeI}$ rate.
 Both bounds have issues when $\ssiz/\nstrat$ is not sufficiently large, a problem stemming
-from the poor quality of the approximation $\svsig\approx\svsig$, and which was seen
-above.
+from the poor quality of the approximation $\svsig\approx\svsig$, and which was seen above.
 However, here we see closer to nominal coverage for larger \nstrat for both methods.
 It is not clear how the coverage will behave for larger $\ssiz/\nstrat$, though
 that seems like an unlikely problem in practice.
@@ -1364,7 +1363,7 @@ to assess the effects of \apxref{perfect_cov}.
 In our simulations, we set $\nstrathej = \nstrat/2$, and let $\hejG$ be the first \nstrathej rows of the identity matrix.
 We set $\pvmu=c \vone$ and $\pvsig=\eye$.
 We perform $\Sexpr{prty(nrep)}$ simulations for different values of $\Hejpsnrsqopt{\hejG}$, $\nstrat$ and $\ssiz$,
-computing \psnr[a] for the hedged portfolio, as well as \Hejssrsqopt{\hejG}.
+computing \psnr[a] for the hedged portfolio, as well as \Hejssrsqopt{\hejG} and \ssrsqoptG{\hejG}.
 We compute the lower \Sexpr{typeI} bound using knowledge of \Hejpsnrsqopt{\hejG} and compute the empirical type I rate
 over the $\Sexpr{prty(nrep)}$ simulations, which we plot versus $\ssiz/\nstrat$ in \figref{hejci_plots}.
 Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\nstrat$ or so.
@@ -1372,10 +1371,8 @@ Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\n
 
 <<'hejci_plots',dependson=c('hejci_collect_sims'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
 fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of a one-sided confidence bound for $\\psnr_{a}$ are shown ",
-                  "more tk. ")
-                  #"for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nstrat. ",
-                  #"Type I rates are plotted versus $\\ssiz/\\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. ")
-									#"The confidence intervals generally fail to achieve the nominal rate except for unrealistically large values of \\ssiz. ")
+                  "for the hedged portfolio problem.  We set $\\nstrathej=\\nstrat/2$ and take $\\pvmu\\propto\\vone$. ",
+                  "The SNR in the facet titles refers to $\\sqrt{\\Hejpsnrsqopt{\\hejG}}$. ")
 
 # plot CIs:
 library(ggplot2)
@@ -1408,6 +1405,113 @@ ph <- cires %>%
 print(finish_plot(ph))
 rm(cires)
 @
+
+<<'feasible_hejci_sims',dependson=c('hejci_collect_sims'),results='hide'>>=
+typeI <- 0.05
+qval <- 0.25
+
+Ffoo <- function(zval,fval,adj,df1,df2) {
+	pf(fval,df1=df1,df2=df2,ncp=adj*zval^2)
+}
+qlim <- function(hejssrsqopt,subssrsqopt,ssiz,nstrat,nstrathej=nstrat/2,lvl=0.025) {
+  df1 <- nstrat - nstrathej
+  df2 <- ssiz - nstrat
+  wrinkle <- (1 + (ssiz/ssiz-1)*subssrsqopt)
+	fval <- (ssiz/(ssiz-1)) * (df2/df1) * hejssrsqopt / wrinkle
+	ofunc <- function(z) { lvl - Ffoo(z,fval,adj=ssiz / wrinkle,df1=df1,df2=df2) }
+	if (ofunc(0) > 0) { return(0) }
+	zval <- uniroot(ofunc,lower=0,upper=20)$root
+	return(zval)
+}
+# joint bounds
+foo_cibound <- function(hejssrsqopt,subssrsqopt,ssiz,nstrat,nstrathej=nstrat/2,alpha=0.05,q=0.5) {
+  # upper bound on psnropt
+  ub <- qlim(hejssrsqopt,subssrsqopt,ssiz,nstrat,nstrathej,lvl=q*alpha)
+  cons <- qchisq(1-(1-q)*typeI,df=nstrat-nstrathej,ncp=ssiz*ub*ub/4) - ssiz*ub*ub/4
+  ssropt <- sqrt(hejssrsqopt)
+  foobound <- ssropt - cons / (ssiz*ssropt)
+}
+
+# based on delta 2
+# ignores q
+baz_cibound <- function(hejssrsqopt,subssrsqopt,ssiz,nstrat,nstrathej=nstrat/2,alpha=0.05,...) {
+  # make ub via delta_2
+	df2 <- ssiz - nstrat
+  wrinkle <- (1 + (ssiz/ssiz-1)*subssrsqopt)
+	delta0 <- ((df2 - 2) / (ssiz-1)) * hejssrsqopt - ((nstrat-nstrathej)/ssiz) * wrinkle
+	delta2 <- pmax(delta0,(2/(nstrat-nstrathej+2))*((df2-2)/(ssiz-1))*hejssrsqopt)
+  ub <- sqrt(delta2)
+  cons <- qchisq(1-typeI,df=nstrat-nstrathej,ncp=ssiz*ub*ub/4) - ssiz*ub*ub/4
+  ssropt <- sqrt(hejssrsqopt)
+  foobound <- ssropt - cons / (ssiz*ssropt)
+}
+
+ary_bound <- function(hejssrsqopts,subssrsqopts,ssiz,nstrat,nstrathej=nstrat/2,alpha=0.05,q=0.5,type=c('delta','worse')) {
+	type <- match.arg(type)
+  bdfnc <- switch(type,
+                  delta=baz_cibound,
+                  worse=foo_cibound)
+  ylims <- future_mapply(FUN=bdfnc,hejssrsqopts,subssrsqopts,MoreArgs=list(ssiz=ssiz,nstrat=nstrat,nstrathej=nstrathej,alpha=alpha,q=q))
+}
+
+#system.time({
+  plan(multiprocess)
+  # wow, slow.
+  hejnures <- hejresults %>%
+    group_by(n,p) %>%
+      mutate(ci_del = ary_bound(hejszeta^2,subssrsqopts=dzetasq,ssiz=first(n),nstrat=2*first(p),nstrathej=first(p),alpha=typeI,q=qval,type='delta'),
+             ci_wrs = ary_bound(hejszeta^2,subssrsqopts=dzetasq,ssiz=first(n),nstrat=2*first(p),nstrathej=first(p),alpha=typeI,q=qval,type='worse')) %>%
+    ungroup() %>%
+    group_by(n,p,hejpzeta) %>%
+      summarize(type1_del = mean(hejpsnra < ci_del),
+                type1_wrs = mean(hejpsnra < ci_wrs)) %>%
+    ungroup() 
+  plan(sequential)
+  #rm(hejresults)
+#})
+@
+
+As above we analyze the data from the hedged experiments, but compute feasible confidence bounds.
+We use both the simultaneous CI approach with $q=\Sexpr{qval}$; 
+and plug in $\Hejpsnrsqopt{\hejG}=\sqrt{\delta_2}$ to construct the bound.
+In \figref{feasible_hejci_plots}, we plot the empirical type I rate for both of these bounds
+versus \ssiz, with facets for \psnropt and \nstrat.
+Once again, the $\delta_2$ plug-in estimator has coverage closer to the nominal $\Sexpr{typeI}$ rate,
+and both bounds are anti-conservative when $\ssiz/\nstrat$ is not sufficiently large.
+%
+<<'feasible_hejci_plots',dependson=c('feasible_hejci_sims'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
+fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of two feasible one-sided confidence bounds for $\\psnr_{a}$ are shown ",
+                  "for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nlatf. ",
+                  "The $y$ axis is drawn in square root scale to show detail. ")
+
+# plot CIs:
+library(ggplot2)
+ph <- hejnures %>%
+  mutate(zyr=signif(hejpzeta * sqrt(ope),digits=2)) %>%
+  rename(`annualized SNR`=zyr) %>%
+  tidyr::gather(key=type,value=type1,matches('^type1_')) %>%
+	mutate(type=case_when(.$type=='type1_del' ~ 'delta2',
+                        .$type=='type1_wrs' ~ 'joint',
+												TRUE ~ 'bad code')) %>%
+  mutate(k=2*p) %>%
+  mutate(khej=p) %>%
+  mutate(xrat=n/k) %>%
+  ggplot(aes(xrat,type1,linetype=type,shape=type,color=factor(k))) +
+  geom_line() + geom_point(aes(shape=type)) + 
+  #facet_grid(k ~ `annualized SNR`,scales='free',labeller=label_both) + 
+  facet_grid(. ~ `annualized SNR`,scales='free',labeller=label_both) + 
+  geom_hline(yintercept=0.05,linetype=2,alpha=0.5) + 
+  scale_x_log10() +
+  scale_y_sqrt() + 
+  #scale_y_continuous() + 
+  labs(x=expression(n/k),
+       y='empirical type I rates at nominal 0.05 level',
+       color=expression(k),
+       linetype='CI Bound',shape='CI Bound',
+       title='Coverage of CIs on achieved SNR of the hedged Markowitz portfolio\nGaussian returns, feasible CI')
+print(finish_plot(ph))
+@
+
 %UNFOLD
 
 %UNFOLD
