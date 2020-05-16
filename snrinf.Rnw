@@ -1251,6 +1251,163 @@ for the hedged case are
 \end{split}
 \end{equation}
 
+\paragraph{Checking Coverage}
+
+%\begin{example}[hedged CI Coverage]%FOLDUP
+% welp, here we go...
+<<'hejci_sims',dependson=c('setup'),results='hide'>>=
+suppressMessages({
+  library(dplyr)
+  library(tidyr)
+  library(tibble)
+  library(SharpeR)
+  library(future.apply)
+})
+
+# for testing, use these
+#pzeta <- 10*c(0,0.01,0.02,0.03,0.04)
+#n <- 1000
+#p <- 4
+
+# here we will perform a simulation on n periods of data with 2p assets
+# with equal mean across assets and compute the hedged SR for the first
+# p excluding the second p.
+onesim <- function(pzeta,n,p) {
+  nstrat <- 2*p
+  pmus <- pzeta / sqrt(nstrat)
+  # simulate an X is too slow, we do multiple pzeta at once, which is hard to follow.
+  smu1 <- rnorm(nstrat,mean=pmus[1],sd=1 / sqrt(n))
+  ssig <- rWishart(1,df=n-1,Sigma=diag(1,ncol=nstrat,nrow=nstrat)) / n  # sic n
+  dim(ssig) <- c(nstrat,nstrat)
+
+  # total effect
+  smus <- outer(smu1,pmus - pmus[1],FUN='+')
+  smps <- solve(ssig,smus)
+  szetasq <- (colSums(smus * smps))
+  # sub effect
+  dmus <- outer(smu1[1:p],pmus - pmus[1],FUN='+')
+  dmps <- solve(ssig[1:p,1:p],dmus)
+  dzetasq <- (colSums(dmus * dmps))
+
+  hejszeta <- sqrt(szetasq - dzetasq)
+
+  foomps <- smps
+  foomps[1:p,] <- foomps[1:p,] - dmps
+
+  hejpsnra <- pmus * as.numeric(colSums(foomps) / sqrt(colSums(foomps^2)))
+  hejpzeta <- pzeta/sqrt(2)
+  cbind(hejpzeta,hejszeta,dzetasq,hejpsnra)
+}
+# do that many times.
+repsim <- function(nrep,zetas,n,p) {
+  foo <- future_replicate(nrep,onesim(pzeta=zetas,n,p))
+  baz <- aperm(foo,c(1,3,2))
+  dim(baz) <- c(nrep * length(zetas),dim(foo)[2])
+  colnames(baz) <- colnames(foo)
+  invisible(as.data.frame(baz))
+}
+
+# actually do it many times.
+ope <- 252
+zetasq <- c(1/4,1,4) / ope
+zeta <- sqrt(2*zetasq)
+
+params <- tidyr::crossing(tibble::tibble(n=round(100*2^(-1:10))),
+                          tibble::tibble(p=2^(1:3))) %>%
+  filter(n > 10 * p) %>%
+  filter(n < 20000 * p)
+
+# this good?
+# 100K takes maybe 3 minutes?
+nrep <- 100000L
+
+plan(multiprocess)
+set.seed(2356)
+system.time({
+hejresults <- params %>%
+  group_by(n,p) %>%
+    summarize(sims=list(repsim(nrep=nrep,zetas=zeta,n=n,p=p))) %>%
+  ungroup() %>%
+  tidyr::unnest()
+})
+plan(sequential)
+@
+<<'hejci_collect_sims',dependson=c('hejci_sims'),results='hide'>>=
+typeI <- 0.05
+
+# confidence intervals and coverage:
+# this takes 10 times longer than the simulations? wtaf?
+system.time({
+  # wow, slow.
+  qalpha <- qnorm(typeI)
+
+  foores <- hejresults %>%
+    distinct(n,hejpzeta,p) %>%
+    mutate(cons = qchisq(1-typeI,df=p,ncp=n*hejpzeta*hejpzeta/4) - n*hejpzeta*hejpzeta/4) 
+
+  cires <- hejresults %>%
+    left_join(foores,by=c('hejpzeta','p','n')) %>%
+    mutate(ci_new = hejszeta - cons / (n*hejszeta)) %>%
+    group_by(hejpzeta,n,p) %>%
+      summarize(#type1_add = mean(psnr < ci_add),
+                #type1_div = mean(psnr < ci_div),
+                #type1_tas = mean(psnr < ci_tas),
+                type1_new = mean(hejpsnra < ci_new)) %>%
+    ungroup() %>%
+    mutate(zyr=signif(hejpzeta * sqrt(ope),digits=2)) %>%
+    rename(`annualized SNR`=zyr) 
+})
+@
+
+As in the unhedged case, we first perform simulations where the population parameter \Hejpsnrsqopt{\hejG} is known,
+to assess the effects of \apxref{perfect_cov}.
+In our simulations, we set $\nstrathej = \nstrat/2$, and let $\hejG$ be the first \nstrathej rows of the identity matrix.
+We set $\pvmu=c \vone$ and $\pvsig=\eye$.
+We perform $\Sexpr{prty(nrep)}$ simulations for different values of $\Hejpsnrsqopt{\hejG}$, $\nstrat$ and $\ssiz$,
+computing \psnr[a] for the hedged portfolio, as well as \Hejssrsqopt{\hejG}.
+We compute the lower \Sexpr{\typeI} bound using knowledge of \Hejpsnrsqopt{\hejG} and compute the empirical type I rate
+over the $\Sexpr{prty(nrep)}$ simulations, which we plot versus $\ssiz/\nstrat$ in \figref{hejci_plots}.
+Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\nstrat$ or so.
+% more here: this is not the end all simulation of course.
+
+<<'hejci_plots',dependson=c('hejci_collect_sims'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
+fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of a one-sided confidence bound for $\\psnr_{a}$ are shown ",
+                  "more tk. ")
+                  #"for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nstrat. ",
+                  #"Type I rates are plotted versus $\\ssiz/\\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. ")
+									#"The confidence intervals generally fail to achieve the nominal rate except for unrealistically large values of \\ssiz. ")
+
+# plot CIs:
+library(ggplot2)
+ph <- cires %>%
+  tidyr::gather(key=type,value=type1,matches('^type1_')) %>%
+	mutate(type=case_when(.$type=='type1_add' ~ 'difference',
+												.$type=='type1_div' ~ 'product',
+												.$type=='type1_tas' ~ 'tas',
+												.$type=='type1_new' ~ 'SRIC',
+												TRUE ~ 'bad code')) %>%
+  mutate(type=factor(type,levels=c('SRIC','difference','product','tas'))) %>%
+  filter(as.character(type)=='SRIC') %>%
+  mutate(khej=p) %>%
+  mutate(k=2*p) %>%
+  mutate(xrat=n/k) %>%
+  ggplot(aes(xrat,type1,color=factor(k))) +
+  geom_line() + geom_point() + 
+  #facet_grid(k ~ `annualized SNR`,scales='free',labeller=label_both) + 
+  facet_grid(. ~ `annualized SNR`,scales='free',labeller=label_both) + 
+  scale_x_log10() +
+  #scale_y_sqrt() + 
+  scale_y_continuous() + 
+  geom_hline(yintercept=0.05,linetype=2,alpha=0.5) + 
+  labs(x=expression(n/k),
+       y='empirical type I rates at nominal 0.05 level',
+       color=expression(k),
+       shape=expression(k),
+       #color='CI Bound',shape='CI Bound',
+       title='Coverage of CIs on achieved SNR of the hedged Markowitz portfolio\nGaussian returns, using clairvoyance.')
+print(finish_plot(ph))
+rm(cires)
+@
 %UNFOLD
 
 %UNFOLD
