@@ -1365,7 +1365,7 @@ In our simulations, we set $\nstrathej = \nstrat/2$, and let $\hejG$ be the firs
 We set $\pvmu=c \vone$ and $\pvsig=\eye$.
 We perform $\Sexpr{prty(nrep)}$ simulations for different values of $\Hejpsnrsqopt{\hejG}$, $\nstrat$ and $\ssiz$,
 computing \psnr[a] for the hedged portfolio, as well as \Hejssrsqopt{\hejG}.
-We compute the lower \Sexpr{\typeI} bound using knowledge of \Hejpsnrsqopt{\hejG} and compute the empirical type I rate
+We compute the lower \Sexpr{typeI} bound using knowledge of \Hejpsnrsqopt{\hejG} and compute the empirical type I rate
 over the $\Sexpr{prty(nrep)}$ simulations, which we plot versus $\ssiz/\nstrat$ in \figref{hejci_plots}.
 Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\nstrat$ or so.
 % more here: this is not the end all simulation of course.

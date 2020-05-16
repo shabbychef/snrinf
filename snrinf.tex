@@ -1,4 +1,54 @@
-\documentclass[10pt,a4paper,english]{article}
+\documentclass[10pt,a4paper,english]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
 
 % now ignored, I think:
 %\VignetteEngine{knitr::knitr}
@@ -42,7 +92,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{48ad5238b79d02e8b9d120b7a53e59025b55ac9d}
+\providecommand{\gitHash}{55f8176fbc33bcf6b03f02174afb0d7e394105cf}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -368,6 +418,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % document incantations%FOLDUP
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
 
 \title{Inference on Achieved Signal Noise Ratio}
@@ -954,7 +1005,76 @@ for the hedged case are
 
 
 
+As in the unhedged case, we first perform simulations where the population parameter \Hejpsnrsqopt{\hejG} is known,
+to assess the effects of \apxref{perfect_cov}.
+In our simulations, we set $\nstrathej = \nstrat/2$, and let $\hejG$ be the first \nstrathej rows of the identity matrix.
+We set $\pvmu=c \vone$ and $\pvsig=\eye$.
+We perform $100,000$ simulations for different values of $\Hejpsnrsqopt{\hejG}$, $\nstrat$ and $\ssiz$,
+computing \psnr[a] for the hedged portfolio, as well as \Hejssrsqopt{\hejG}.
+We compute the lower 0.05 bound using knowledge of \Hejpsnrsqopt{\hejG} and compute the empirical type I rate
+over the $100,000$ simulations, which we plot versus $\ssiz/\nstrat$ in \figref{hejci_plots}.
+Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\nstrat$ or so.
+% more here: this is not the end all simulation of course.
+
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfhejci_plots-1} \caption[The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown more tk]{The empirical type I rate, over 100,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown more tk. }\label{fig:hejci_plots}
+\end{figure}
 
 
+\end{knitrout}
+%UNFOLD
+
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Examples}%FOLDUP
 
 
+%\begin{example}[Fama French Four Factors, Confidence Intervals]%FOLDUP
+%\index{Fama French 4 Factor returns}
+\paragraph{Fama French 4 Factor Returns}
+\label{example:3400185f-3864-4011-94df-5f756d81c044}
+
+We consider a portfolio constructed on the `Market', size (SMB), value (HML)
+and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
+with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
+The set consists of $\ssiz=1104\,\moto{}$ of data, from 
+Jan 1927 through Dec 2018. 
+We observe $\ssrsqopt=0.098\,\moto{-1}$.
+%We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
+From this we compute $\delta_2 = 0.094\,\moto{-1}$.
+Plugging in $\sqrt{\delta_2}$ for \psnropt 
+we compute a two-sided $95\%$ confidence bound on \psnr[a] as 
+$\ccinterval{0.234}{0.353}\,\moto{-\halff}$.
+By comparison, via the connection to the \flaw{} distribution,
+we compute $95\%$ confidence intervals on \psnropt as
+$\ccinterval{0.247}{0.369}\,\moto{-\halff}$.
+%\end{example}%UNFOLD
+
+
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}%FOLDUP
+
+Testing indicates the confidence bound exhibits closer to nominal
+coverage than the known asymptotic bounds for reasonable \ssiz and \nstrat.
+Further work should naturally focus on mitigating the effects of the
+approximation $\svsig\approx\pvsig$, and finding a coverage guarantee
+of the plug-in estimator. 
+We also anticipate that this confidence bound procedure can be adapted
+to deal with hedging constraints and conditional expectation models.
+
+%UNFOLD
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% bibliography%FOLDUP
+\bibliographystyle{plainnat}
+%\bibliography{SharpeR}
+\bibliography{snrinf}
+%UNFOLD
+
+\end{document}
+%for vim modeline: (do not edit)
+% vim:fdm=marker:fmr=FOLDUP,UNFOLD:cms=%%s:syn=rnoweb:ft=rnoweb:et:nu:tw=131
