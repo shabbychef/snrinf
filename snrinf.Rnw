@@ -464,7 +464,7 @@ The procedure relies on a statistic similar to the Sharpe Ratio Information
 Criterion. \cite{doi:10.1080/14697688.2020.1718746}
 Testing indicates the procedure is somewhat conservative, but
 otherwise works well for reasonable values of sample and asset universe sizes.
-%We adapt the procedure to deal with generalizations of the portfolio optimization problem.
+We adapt the procedure to deal with generalizations of the portfolio optimization problem.
 \end{abstract}%UNFOLD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1515,6 +1515,7 @@ print(finish_plot(ph))
 %UNFOLD
 
 %UNFOLD
+%UNFOLD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Examples}%FOLDUP
@@ -1600,7 +1601,8 @@ Further work should naturally focus on mitigating the effects of the
 approximation $\svsig\approx\pvsig$, and finding a coverage guarantee
 of the plug-in estimator. 
 We also anticipate that this confidence bound procedure can be adapted
-to deal with hedging constraints and conditional expectation models.
+to deal with %hedging constraints and 
+conditional expectation models.
 
 %UNFOLD
 

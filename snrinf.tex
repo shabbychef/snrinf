@@ -92,7 +92,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{105f332ada88a24e28accc20e5821c0a2af5f26c}
+\providecommand{\gitHash}{3bc52ae1b6d0c283df48de8e11a9d8d53c28799a}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -440,7 +440,7 @@ The procedure relies on a statistic similar to the Sharpe Ratio Information
 Criterion. \cite{doi:10.1080/14697688.2020.1718746}
 Testing indicates the procedure is somewhat conservative, but
 otherwise works well for reasonable values of sample and asset universe sizes.
-%We adapt the procedure to deal with generalizations of the portfolio optimization problem.
+We adapt the procedure to deal with generalizations of the portfolio optimization problem.
 \end{abstract}%UNFOLD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1044,6 +1044,7 @@ and both bounds are anti-conservative when $\ssiz/\nstrat$ is not sufficiently l
 %UNFOLD
 
 %UNFOLD
+%UNFOLD
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Examples}%FOLDUP
@@ -1058,7 +1059,7 @@ We consider a portfolio constructed on the `Market', size (SMB), value (HML)
 and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
 with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
 The set consists of $\ssiz=1104\,\moto{}$ of data, from 
-Jan 1927 through Dec 2018. 
+1927 through 2018.917. 
 We observe $\ssrsqopt=0.098\,\moto{-1}$.
 %We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
 From this we compute $\delta_2 = 0.094\,\moto{-1}$.
@@ -1082,7 +1083,8 @@ Further work should naturally focus on mitigating the effects of the
 approximation $\svsig\approx\pvsig$, and finding a coverage guarantee
 of the plug-in estimator. 
 We also anticipate that this confidence bound procedure can be adapted
-to deal with hedging constraints and conditional expectation models.
+to deal with %hedging constraints and 
+conditional expectation models.
 
 %UNFOLD
 
