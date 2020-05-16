@@ -1076,11 +1076,12 @@ changes in the leading constant to satisfy the risk budget).
 %Without loss of generality we can assume that \hejG consists of some \nstrathej
 %distinct rows of the $\sbby{\nstrat}$ identity matrix.
 
-The squared \txtSNR of the optimal portfolio is
+The squared \txtSNR of the optimal portfolio we write as 
 \begin{equation}
-\psnrsqopt
-= \qiform{\pvsig}{\pvmu} -
-  \qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}.
+%\psnrsqopt
+\Hejpsnrsqopt{\hejG} 
+\defeq 
+\qiform{\pvsig}{\pvmu} - \qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}.
 %= \psnrsqoptG{\eye} - \psnrsqoptG{\hejG},
 \label{eqn:psnr_Gcons}
 \end{equation}
@@ -1109,6 +1110,33 @@ The \txtASNR of this portfolio is
   \frac{\tr{\pvmu}\sportwoptHej{\hejG}}{\sqrt{\qform{\pvsig}{\sportwoptHej{\hejG}}}}.
 \end{equation}
 
+%follows a (central) \flaw{} distribution under the null hypothesis of $\Hejpsnrsqopt{\hejG}=0$. \cite{rao1952}
+Define:
+\begin{align*}
+\ssrsqoptG{\hejG} &\defeq \qiform{\wrapParens{\qoform{\svsig}{\hejG}}}{\wrapParens{\hejG\svmu}}.
+%\Hejpsnrsqopt{\hejG} &\defeq \qiform{\pvsig}{\pvmu} - \qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\wrapParens{\hejG\pvmu}}.
+\end{align*}
+Giri showed that conditional on observing \ssrsqoptG{\hejG},
+{\small
+\begin{equation}
+%F_{\hejG}}
+\acondb{
+	\frac{\ssiz}{\ssiz-1}\frac{\ssiz - \nstrat}{\nstrat - \nstrathej}\frac{\Hejssrsqopt{\hejG}}{1 +
+  \frac{\ssiz}{\ssiz-1}\ssrsqoptG{\hejG}} 
+}{\ssrsqoptG{\hejG}}
+	\sim
+\ncflaw{\nstrat-\nstrathej,\ssiz-\nstrat,\frac{\ssiz}{1 +
+\frac{\ssiz}{\ssiz-1}\ssrsqoptG{\hejG}} 
+%\wrapParens{\psnrsqoptG{\eye} - \psnrsqoptG{\hejG}}
+	\Hejpsnrsqopt{\hejG}
+	},
+\label{eqn:giri_done_I}
+\end{equation}%
+}%
+where \ncflaw{\df[1],\df[2],\ncfp} is the non-central \flaw{}-distribution
+with \df[1], \df[2] degrees of freedom and non-centrality parameter
+\ncfp.  \cite{giri1964likelihood,pav_the_book}
+
 %\index{portfolio spanning}
 %The quantity $\psnrsqopt$ in \eqnref{psnr_Gcons} is the
 %drop in squared \txtSNR incurred by imposing the \hejG hedge constraint.
@@ -1118,6 +1146,36 @@ The \txtASNR of this portfolio is
 %pre-fixed subset of \nstrathej assets has the same \txtSR as the
 %optimal portfolio on all \nstrat assets, \ie whether those \nstrathej
 %assets `span' the set of all assets.  We will consider those in the sequel.
+
+Now we apply \apxref{perfect_cov} to find that
+{\small
+\begin{align*}
+  \Hejpsnrsqopt{\hejG} - \psnr[a]\sqrt{\Hejpsnrsqopt{\hejG}} 
+  & \approx 
+  \tr{\wrapParens{\svmu-\pvmu}}\minv{\pvsig}\svmu -
+  \tr{\wrapParens{\svmu-\pvmu}}\tr{\hejG}
+  \minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\svmu,\\
+  &=
+  \oneby{\ssiz}
+  \wrapBracks{
+  \tr{\vect{z}}\trchol{\pvsig}
+  \minv{\pvsig}
+  \wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}} -
+  \tr{\vect{z}}\trchol{\pvsig}\tr{\hejG}
+  \minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG
+  \wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}}},\\
+  &=
+  \oneby{\ssiz}
+  \wrapBracks{
+  \tr{\vect{z}}
+  \wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}} -
+  \tr{\vect{z}}\trchol{\pvsig}\tr{\hejG}
+  \minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\chol{\pvsig}
+  \wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}}},
+\end{align*}%
+}%
+where $\vect{z} \sim\normlaw{\vzero,\eye}.$
+
 %UNFOLD
 
 %UNFOLD
