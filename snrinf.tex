@@ -92,7 +92,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{f69920ce976328f4ff24849fdbd338897a27f51b}
+\providecommand{\gitHash}{b21e5bd2c7b08605b1602d5918573db79765cc94}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -631,8 +631,7 @@ $$
 %\end{align*}
 If we want this condition to hold with probability \typeI we should set
 \begin{equation}
-\cono[\typeI] = {\chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\psnrsqopt}{4}} -
-\frac{\ssiz\psnrsqopt}{4}},
+\cono[\typeI] = {\chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\psnrsqopt}{4}} - \frac{\ssiz\psnrsqopt}{4}},
 \end{equation}
 where \chisqqnt{q}{\df,\nctp} is the $q$ quantile of the non-central chi-square distribution
 with \df degrees of freedom and non-centrality parameter \nctp.
@@ -839,7 +838,7 @@ is
 %Under this assumption, the optimal
 %portfolio is 
 \begin{equation*}
-\pportwopt 
+\pportwoptHej{\hejG}
 = c \wrapParens{\minv{\pvsig}{\pvmu} -
   \qiform{\wrapParens{\qoform{\pvsig}{\hejG}}}{\hejG}\pvmu}.
 %= c_1 \pportwoptG{\eye} - c_2 \pportwoptG{\hejG},
@@ -847,6 +846,7 @@ is
 %using the notation from \eqnref{opt_port_solve_cons_I}.
 %The constants $c_1, c_2$ adjust for the risk budget.
 %\subsecref{basic_conpo}.
+When $\rfr > 0$, the unique solution is found by setting $c$ so that the risk budget is an equality.
 Note that, up to scaling, $\minv{\pvsig}\pvmu$ is the unconstrained optimal
 portfolio, and thus the imposition of the \hejG constraint only changes
 the unconstrained portfolio in assets corresponding to columns of \hejG 
@@ -929,34 +929,74 @@ with \df[1], \df[2] degrees of freedom and non-centrality parameter
 %optimal portfolio on all \nstrat assets, \ie whether those \nstrathej
 %assets `span' the set of all assets.  We will consider those in the sequel.
 
-Now we apply \apxref{perfect_cov} to find that
-{\small
+Now we apply \apxref{perfect_cov}, and complete the square as we did in the unhedged case, to find that
+{\scriptsize
 \begin{align*}
   \Hejpsnrsqopt{\hejG} - \psnr[a]\sqrt{\Hejpsnrsqopt{\hejG}} 
   & \approx 
   \tr{\wrapParens{\svmu-\pvmu}}\minv{\pvsig}\svmu -
   \tr{\wrapParens{\svmu-\pvmu}}\tr{\hejG}
   \minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\svmu,\\
+  %&=
+  %\oneby{\ssiz}
+  %\wrapBracks{
+  %\tr{\vect{z}}\trchol{\pvsig}
+  %\minv{\pvsig}
+  %\wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}} -
+  %\tr{\vect{z}}\trchol{\pvsig}\tr{\hejG}
+  %\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG
+  %\wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}}},\\
   &=
   \oneby{\ssiz}
   \wrapBracks{
-  \tr{\vect{z}}\trchol{\pvsig}
-  \minv{\pvsig}
-  \wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}} -
-  \tr{\vect{z}}\trchol{\pvsig}\tr{\hejG}
-  \minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG
-  \wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}}},\\
-  &=
-  \oneby{\ssiz}
+    \qform{\wrapParens{\eye - \trchol{\pvsig}\tr{\hejG}\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\chol{\pvsig}}}{%
+      \wrapParens{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}}}}\\
+    &\phantom{=}\,
+  -\oneby{4\ssiz}
   \wrapBracks{
-  \tr{\vect{z}}
-  \wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}} -
-  \tr{\vect{z}}\trchol{\pvsig}\tr{\hejG}
-  \minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\chol{\pvsig}
-  \wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}}},
+    \qform{\wrapParens{\eye - \trchol{\pvsig}\tr{\hejG}\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\chol{\pvsig}}}{%
+      \wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu}}},
+  %\tr{\vect{z}}
+  %\wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}} -
+  %\tr{\vect{z}}\trchol{\pvsig}\tr{\hejG}
+  %\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\chol{\pvsig}
+  %\wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}}},
 \end{align*}%
 }%
 where $\vect{z} \sim\normlaw{\vzero,\eye}.$
+Now note that the matrix 
+$$\Mtx{A} = {\eye - \trchol{\pvsig}\tr{\hejG}\minv{\wrapParens{\qoform{\pvsig}{\hejG}}}\hejG\chol{\pvsig}}$$
+is idempotent with rank $\nstrat - \nstrathej$.
+Thus a quadratic form in \Mtx{A} follows a non-central $\chi^2$ distribution\footnote{\emph{n.b.} the standard definition of
+non-centrality parameter in the time Graybill and Marsaglia wrote their paper is different from the one we use today by a factor of
+$1/2$.} with degrees of freedom equal to the rank of \Mtx{A}. \cite[Theorem 2]{10.2307/2237227}
+Thus
+\begin{equation*}
+\Hejpsnrsqopt{\hejG} - \psnr[a]\sqrt{\Hejpsnrsqopt{\hejG}} \sim
+  \oneby{\ssiz}\wrapParens{\chisqlaw{\nstrat - \nstrathej,\frac{\ssiz\Hejpsnrsqopt{\hejG}}{4}} - \frac{\ssiz\Hejpsnrsqopt{\hejG}}{4}}.
+\end{equation*}
+
+Then, as in the unhedged case, we have
+\begin{equation}
+  \Pr{\psnr[a] \le \sqrt{\Hejssrsqopt{\hejG}} - \frac{\cono[{\typeI}]}{\ssiz\sqrt{\Hejssrsqopt{\hejG}}}} = \typeI,
+\end{equation}
+if we let
+$$
+\cono[\typeI] = {\chisqqnt{1-\typeI}{\nstrat - \nstrathej, \frac{\ssiz\Hejpsnrsqopt{\hejG}}{4}} - \frac{\ssiz\Hejpsnrsqopt{\hejG}}{4}}.
+$$
+To perform feasible inference one will need to estimate \Hejpsnrsqopt{\hejG}. 
+Again this will be via the connection to a non-central \flaw{}-distribution, \eqnref{giri_done_I}.
+One can either find an upper quantile directly, or use a KRS-type estimator, which 
+for the hedged case are 
+\begin{equation}
+\label{eqn:hedged_KRS_estimators}
+\begin{split}
+  \delta_0 &= \frac{\wrapParens{\dftwo-2}}{\ssiz-1}\Hejssrsqopt{\hejG} - \frac{\nstrat-\nstrathej}{\ssiz}\wrapParens{1 +
+  \frac{\ssiz}{\ssiz-1}\ssrsqoptG{\hejG}},\\
+	\delta_1 &= \fmax{\delta_0,0},\\
+  \delta_2 &= \fmax{\delta_0,\frac{2}{\nstrat-\nstrathej+2}\frac{\dftwo-2}{\ssiz-1}\Hejssrsqopt{\hejG}}.
+\end{split}
+\end{equation}
 
 %UNFOLD
 
