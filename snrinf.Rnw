@@ -562,62 +562,97 @@ Inspired by the SRIC, we seek a constant $\cono[{\typeI}]$ such that
 \end{equation}
 %\label{eqn:asnr_ci}
 %\Pr{\ssropt - \frac{\chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\psnrsqopt}{4}} - \frac{\ssiz\psnrsqopt}{4}}{\ssiz\ssropt} \ge \pql{\sportwopt}} = \typeI.
-Again we assume \apxref{perfect_cov}.
-Under this approximation,
+Under \apxref{perfect_cov},
 \begin{equation}
   \psnr[a] 
-  = \frac{\tr{\pvmu}\minv{\pvsig}\svmu}{\sqrt{\qform{\pvsig}{\wrapParens{\minv{\pvsig}\svmu}}}}
+  \approx
+  \frac{\tr{\pvmu}\minv{\pvsig}\svmu}{\sqrt{\qform{\pvsig}{\wrapParens{\minv{\pvsig}\svmu}}}}
   = \frac{\tr{\pvmu}\minv{\pvsig}\svmu}{\sqrt{\qiform{\pvsig}{\svmu}}}
   = \frac{\tr{\pvmu}\minv{\pvsig}\svmu}{\ssropt}.
 \end{equation}
-Now we note that for Gaussian returns,
+Under the approximation we also have $\ssrsqopt\approx\qiform{\pvsig}{\svmu}$.
+We note that for Gaussian returns, we can write
 \begin{equation*}
-  %\svmu = \pvmu + \oneby{\sqrt{\ssiz}}\chol{\pvsig}\vect{z},
-  \svmu \sim \normlaw{\pvmu,\oneby{\ssiz}\pvsig}.
+  \svmu = \pvmu + \oneby{\sqrt{\ssiz}}\chol{\pvsig}\vect{z},
+  %\svmu \sim \normlaw{\pvmu,\oneby{\ssiz}\pvsig}.
 \end{equation*}
-Thus $\ichol{\pvsig}\svmu \sim
-\normlaw{\ichol{\pvsig}\pvmu,\oneby{\ssiz}\eye},$ where $\ichol{\pvsig}$ is the
-inverse of the (symmetric) square root of \pvsig.
-Note that $\norm{\ichol{\pvsig}\pvmu}=\psnropt$.
-
-Now take \Mtx{P} to be a orthogonal matrix that rotates $\ichol{\pvsig}\pvmu$
-onto $\psnropt\basev[1]$.
-Then $\Mtx{P}\ichol{\pvsig}\svmu\sim\normlaw{\psnropt\basev[1],\oneby{\ssiz}\eye}$.
+where $\vect{z} \sim\normlaw{\vzero,\eye}.$
 Thus
 \begin{align*}
-\tr{\pvmu}\minv{\pvsig}\svmu 
-&= \tr{\pvmu}\trichol{\pvsig}\tr{\Mtx{P}}\Mtx{P}\ichol{\pvsig}\svmu
-= \psnropt\trbasev[1]\Mtx{P}\ichol{\pvsig}\svmu
-\sim 
-  \frac{\psnropt}{\sqrt{\ssiz}}\wrapParens{\sqrt{\ssiz}\psnropt + z_1},\\
-  %\psnrsqopt + \frac{\psnropt}{\sqrt{\ssiz}}z_1,\\  %\normlaw{\psnrsqopt,\frac{\psnrsqopt}{\ssiz}}.
-  \qiform{\pvsig}{\svmu} 
-&= \tr{\svmu}\trichol{\pvsig}\tr{\Mtx{P}}\Mtx{P}\ichol{\pvsig}\svmu
-  \sim \oneby{\ssiz}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 + \oneby{\ssiz}\sum_{2 \le i \le \nstrat}z_i^2,
-\end{align*}
-where the $z_i$ are independent standard Gaussians.
+  \ssrsqopt - \psnr[a]\ssropt 
+  & \approx 
+  \qiform{\pvsig}{\svmu} - \tr{\pvmu}\minv{\pvsig}\svmu,\\
+  &=
+  \tr{\wrapParens{\svmu-\pvmu}}\minv{\pvsig}\svmu,\\
+  &=
+  \oneby{\ssiz}
+  \tr{\vect{z}}\trchol{\pvsig}
+  \minv{\pvsig}
+  \wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}},\\
+  &=
+  \oneby{\ssiz}
+  \tr{\vect{z}}
+  \wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}},\\
+  &=
+  \oneby{\ssiz}
+  \tr{\wrapParens{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z} - \half\sqrt{\ssiz}\ichol{\pvsig}\pvmu}}
+     \wrapParens{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z} + \half\sqrt{\ssiz}\ichol{\pvsig}\pvmu},\\
+  &=
+  \oneby{\ssiz}\wrapParens{
+    \norm{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}}^2
+    - \norm{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu}^2},\\
+  &\sim
+  \oneby{\ssiz}\wrapParens{\chisqlaw{\nstrat,\frac{\ssiz\psnrsqopt}{4}} - \frac{\ssiz\psnrsqopt}{4}}.
+\end{align*}%
 
-Then we have
-\begin{align*}
-  \psnr[a] \le \ssropt - \frac{c}{\ssiz\ssropt} 
-  &\Leftrightarrow \psnr[a]\ssropt \le \ssrsqopt - \frac{c}{\ssiz},\\
-  &\Leftrightarrow \tr{\pvmu}\minv{\pvsig}\svmu \le \qiform{\pvsig}{\svmu} - \frac{c}{\ssiz},\\
-  &\Leftrightarrow 
-  \frac{\psnropt}{\sqrt{\ssiz}}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}
-  \le 
-  \oneby{\ssiz}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 +
-  \oneby{\ssiz}\sum_{2 \le i \le \nstrat}z_i^2 - \frac{c}{\ssiz},\\
-  &\Leftrightarrow 
-  c \le 
-  \wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 
-  -\sqrt{\ssiz}\psnropt\wrapParens{\sqrt{\ssiz}\psnropt + z_1}
-  + \sum_{2 \le i \le \nstrat}z_i^2,\\
-  &\Leftrightarrow 
-  c \le 
-  \wrapParens{\frac{\sqrt{\ssiz}\psnropt}{2} + z_1}^2 
-  -\frac{\ssiz\psnrsqopt}{4} 
-  + \sum_{2 \le i \le \nstrat}z_i^2.
-\end{align*}
+Now because 
+$$
+\psnr[a] \le \ssropt - \frac{c}{\ssiz\ssropt} 
+  \Leftrightarrow c \le \ssiz \wrapParens{\ssrsqopt - \psnr[a]\ssropt},
+$$
+%Thus $\ichol{\pvsig}\svmu \sim
+%\normlaw{\ichol{\pvsig}\pvmu,\oneby{\ssiz}\eye},$ where $\ichol{\pvsig}$ is the
+%inverse of the (symmetric) square root of \pvsig.
+%Note that $\norm{\ichol{\pvsig}\pvmu}=\psnropt$.
+%
+%Now take \Mtx{P} to be a orthogonal matrix that rotates $\ichol{\pvsig}\pvmu$
+%onto $\psnropt\basev[1]$.
+%Then $\Mtx{P}\ichol{\pvsig}\svmu\sim\normlaw{\psnropt\basev[1],\oneby{\ssiz}\eye}$.
+%Thus
+%\begin{align*}
+%\tr{\pvmu}\minv{\pvsig}\svmu 
+%&= \tr{\pvmu}\trichol{\pvsig}\tr{\Mtx{P}}\Mtx{P}\ichol{\pvsig}\svmu
+%= \psnropt\trbasev[1]\Mtx{P}\ichol{\pvsig}\svmu
+%\sim 
+  %\frac{\psnropt}{\sqrt{\ssiz}}\wrapParens{\sqrt{\ssiz}\psnropt + z_1},\\
+  %%\psnrsqopt + \frac{\psnropt}{\sqrt{\ssiz}}z_1,\\  %\normlaw{\psnrsqopt,\frac{\psnrsqopt}{\ssiz}}.
+  %\qiform{\pvsig}{\svmu} 
+%&= \tr{\svmu}\trichol{\pvsig}\tr{\Mtx{P}}\Mtx{P}\ichol{\pvsig}\svmu
+  %\sim \oneby{\ssiz}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 + \oneby{\ssiz}\sum_{2 \le i \le \nstrat}z_i^2,
+%\end{align*}
+%where the $z_i$ are independent standard Gaussians.
+%
+%Then we have
+%\begin{align*}
+  %\psnr[a] \le \ssropt - \frac{c}{\ssiz\ssropt} 
+  %&\Leftrightarrow \psnr[a]\ssropt \le \ssrsqopt - \frac{c}{\ssiz},\\
+  %&\Leftrightarrow \tr{\pvmu}\minv{\pvsig}\svmu \le \qiform{\pvsig}{\svmu} - \frac{c}{\ssiz},\\
+  %&\Leftrightarrow 
+  %\frac{\psnropt}{\sqrt{\ssiz}}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}
+  %\le 
+  %\oneby{\ssiz}\wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 +
+  %\oneby{\ssiz}\sum_{2 \le i \le \nstrat}z_i^2 - \frac{c}{\ssiz},\\
+  %&\Leftrightarrow 
+  %c \le 
+  %\wrapParens{\sqrt{\ssiz}\psnropt + z_1}^2 
+  %-\sqrt{\ssiz}\psnropt\wrapParens{\sqrt{\ssiz}\psnropt + z_1}
+  %+ \sum_{2 \le i \le \nstrat}z_i^2,\\
+  %&\Leftrightarrow 
+  %c \le 
+  %\wrapParens{\frac{\sqrt{\ssiz}\psnropt}{2} + z_1}^2 
+  %-\frac{\ssiz\psnrsqopt}{4} 
+  %+ \sum_{2 \le i \le \nstrat}z_i^2.
+%\end{align*}
 If we want this condition to hold with probability \typeI we should set
 \begin{equation}
 \cono[\typeI] = {\chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\psnrsqopt}{4}} -
