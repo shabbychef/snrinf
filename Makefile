@@ -235,12 +235,26 @@ $(DOWNSTREAM_FILES) : $(DOWNSTREAM_D)/% : %
 
 downstream_files : $(DOWNSTREAM_FILES)  ## copy files from this repo to the public, downstream repo.
 
+######################
+######################
+
 arxiv.tgz : $(PROJECT).tex $(PROJECT).bib $(PROJECT).bbl SharpeR.sty figure/   ## tarfile for arxiv
 	tar -czvf $@ $^
 
-tag :  ## echo git tag advice
-	@-echo "git tag -a r$(VERSION) -m 'release $(VERSION)'"
+######################
+######################
+
+tag : ## advice on github tagging
+	@-echo "git tag -a v$(VERSION) -m 'release $(VERSION)'"
 	@-echo "git push --tags"
+
+untag : ## advice on github untagging
+	@-echo "git tag --delete v$(VERSION)"
+	@-echo "git push origin :v$(VERSION)"
+
+really_tag : ## actually github tag 
+	git tag -a v$(VERSION) -m 'release $(VERSION)'
+	git push --tags
 
 #for vim modeline: (do not edit)
 # vim:ts=2:sw=2:tw=149:fdm=marker:fmr=FOLDUP,UNFOLD:cms=#%s:tags=tags;:syn=make:ft=make:ai:si:cin:nu:fo=croqt:cino=p0t0c5(0:

@@ -878,7 +878,7 @@ This method requires computational inversion of the CDF function.
 Then compute
 $$
 c = \max \wrapBraces{\left. \chisqqnt{1-\wrapNeParens{1-q}\typeI}{\nstrat,
-\frac{\ssiz\psnr^2}{4}} - \frac{\ssiz\psnr^2}{4} \right|  0 \le \psnr[u]}.
+\frac{\ssiz\psnr^2}{4}} - \frac{\ssiz\psnr^2}{4} \right|  0 \le \psnr \le \psnr[u]}.
 $$
 The bound $\ssropt - \frac{c}{\ssiz\ssropt}$ then should
 have type I rate at most \typeI.
