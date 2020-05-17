@@ -92,7 +92,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{3bc52ae1b6d0c283df48de8e11a9d8d53c28799a}
+\providecommand{\gitHash}{cc12f7fd333352f56df03b5dd863d84d80f63579}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -636,7 +636,7 @@ If we want this condition to hold with probability \typeI we should set
 where \chisqqnt{q}{\df,\nctp} is the $q$ quantile of the non-central chi-square distribution
 with \df degrees of freedom and non-centrality parameter \nctp.
 
-\paragraph{Checking Coverage}
+\paragraph{Checking coverage}
 
 %\begin{example}[CI Coverage]%FOLDUP
 %\label{example:b9d63112-6dd5-487e-8734-d17bc26740f9}
@@ -646,7 +646,7 @@ Before proceeding, we check whether use of \apxref{perfect_cov}
 leads to a degradation in coverage of a confidence interval implied by \ineqnref{psnr_ci_bound}.
 We draw \ssiz days of returns from the $\nstrat$-variate normal distribution.
 For a fixed value of \psnropt, we perform 
-$1000000$ simulations of computing $\psnr[a]$ and \ssrsqopt, computing a
+$1,000,000$ simulations of computing $\psnr[a]$ and \ssrsqopt, computing a
 one-sided confidence bound and measuring the empirical rate of type I errors.
 We then let \ssiz vary from 50 to $102,400$ days; 
 we let \nstrat vary from 2 to 16;
@@ -997,7 +997,7 @@ for the hedged case are
 \end{split}
 \end{equation}
 
-\paragraph{Checking Coverage}
+\paragraph{Checking coverage}
 
 %\begin{example}[hedged CI Coverage]%FOLDUP
 % welp, here we go...
@@ -1070,7 +1070,26 @@ By comparison, via the connection to the \flaw{} distribution,
 we compute $95\%$ confidence intervals on \psnropt as
 $\ccinterval{0.247}{0.369}\,\moto{-\halff}$.
 %\end{example}%UNFOLD
+%\begin{example}[FF CI with hedge]%FOLDUP
 
+
+Next we consider the imposition of a constraint that the portfolio should be ``hedged against the Market''.
+This corresponds to $\nstrathej=1$ and \hejG is the row of the identity matrix corresponding to the Market factor.
+We compute
+$$
+\ssrsqopt=0.098\,\moto{-1},\quad
+\ssrsqoptG{\hejG}=0.03\,\moto{-1},\quad
+\Hejssrsqopt{\hejG}=0.068\,\moto{-1}.
+$$
+With $\ssiz=1104, \nstrat=4$, we 
+compute the three KRS estimators of \Hejpsnrsqopt{\hejG}, which all take the same value,
+$\delta_0=\delta_1=\delta_2=0.065\moto{-1}.$
+From this we compute a one-sided $95\%$ confidence bound on 
+%$\pql{\sportwoptHej{\hejG}}$ 
+\psnr[a]
+to be 
+$\cointerval{0.195}{\infty}\,\moto{-\halff}$.
+%\end{example}%UNFOLD
 
 %UNFOLD
 
