@@ -235,7 +235,7 @@ $(DOWNSTREAM_FILES) : $(DOWNSTREAM_D)/% : %
 
 downstream_files : $(DOWNSTREAM_FILES)  ## copy files from this repo to the public, downstream repo.
 
-arxiv.tgz : $(PROJECT).tex $(PROJECT).bib figure/   ## tarfile for arxiv
+arxiv.tgz : $(PROJECT).tex $(PROJECT).bib SharpeR.sty figure/   ## tarfile for arxiv
 	tar -czvf $@ $^
 
 tag :  ## echo git tag advice
