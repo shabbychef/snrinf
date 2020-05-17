@@ -62,6 +62,9 @@ ASPELL_FLAGS =
 # and controls speed of build. larger is faster.
 RUNTIME_PARAM 		?= 1
 
+# for git
+VERSION 					?= 2
+
 GID 							?= $$UID
 DOCKER_RUN_FLAGS 		= --user $$UID:$(GID)
 DOCKER_ENV 				 = -e FOO_ENV='foo' -e RUNTIME_PARAM=$(RUNTIME_PARAM)
@@ -231,6 +234,13 @@ $(DOWNSTREAM_FILES) : $(DOWNSTREAM_D)/% : %
 .PHONY : downstream_files
 
 downstream_files : $(DOWNSTREAM_FILES)  ## copy files from this repo to the public, downstream repo.
+
+arxiv.tgz : $(PROJECT).tex $(PROJECT).bib figure/   ## tarfile for arxiv
+	tar -czvf $@ $^
+
+tag :  ## echo git tag advice
+	@-echo "git tag -a r$(VERSION) -m 'release $(VERSION)'"
+	@-echo "git push --tags"
 
 #for vim modeline: (do not edit)
 # vim:ts=2:sw=2:tw=149:fdm=marker:fmr=FOLDUP,UNFOLD:cms=#%s:tags=tags;:syn=make:ft=make:ai:si:cin:nu:fo=croqt:cino=p0t0c5(0:
