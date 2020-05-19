@@ -1,0 +1,97 @@
+\begin{thebibliography}{13}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Anderson(2003)]{anderson2003introduction}
+T.~W. Anderson.
+\newblock \emph{An Introduction to Multivariate Statistical Analysis}.
+\newblock Wiley Series in Probability and Statistics. Wiley, 2003.
+\newblock ISBN 9780471360919.
+\newblock URL \url{http://books.google.com/books?id=Cmm9QgAACAAJ}.
+
+\bibitem[Ao et~al.()Ao, Li, and Zheng]{ao2017solving}
+Mengmeng Ao, Yingying Li, and Xinghua Zheng.
+\newblock Solving the {M}arkowitz optimization problem for large portfolios.
+\newblock URL
+  \url{http://fmaconferences.org/SanDiego/Papers/MAXSER_MengmengAo.pdf}.
+
+\bibitem[Carhart(1997)]{Carhart_1997}
+Mark~M Carhart.
+\newblock On persistence in mutual fund performance.
+\newblock \emph{Journal of Finance}, 52\penalty0 (1):\penalty0 57, 1997.
+\newblock URL \url{http://www.jstor.org/stable/2329556}.
+
+\bibitem[Fama and French(1992)]{Fama_French_1992}
+Eugene~F. Fama and Kenneth~R. French.
+\newblock The cross-section of expected stock returns.
+\newblock \emph{Journal of Finance}, 47\penalty0 (2):\penalty0 427, 1992.
+\newblock URL \url{http://www.jstor.org/stable/2329112}.
+
+\bibitem[French(2017)]{french_data_library}
+Kenneth French.
+\newblock Data library.
+\newblock Privately Published, 2017.
+\newblock URL
+  \url{http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html}.
+
+\bibitem[Giri(1964)]{giri1964likelihood}
+Narayan~C. Giri.
+\newblock On the likelihood ratio test of a normal multivariate testing
+  problem.
+\newblock \emph{The Annals of Mathematical Statistics}, 35\penalty0
+  (1):\penalty0 181--189, 1964.
+\newblock \doi{10.1214/aoms/1177703740}.
+\newblock URL \url{http://projecteuclid.org/euclid.aoms/1177703740}.
+
+\bibitem[Graybill and Marsaglia(1957)]{10.2307/2237227}
+Franklin~A. Graybill and George Marsaglia.
+\newblock Idempotent matrices and quadratic forms in the general linear
+  hypothesis.
+\newblock \emph{The Annals of Mathematical Statistics}, 28\penalty0
+  (3):\penalty0 678--686, 1957.
+\newblock ISSN 00034851.
+\newblock URL \url{http://www.jstor.org/stable/2237227}.
+
+\bibitem[Kubokawa et~al.(1993)Kubokawa, Robert, and
+  Saleh]{kubokawa1993estimation}
+Tatsuya Kubokawa, C.~P. Robert, and A.~K. Md.~E. Saleh.
+\newblock Estimation of noncentrality parameters.
+\newblock \emph{Canadian Journal of Statistics}, 21\penalty0 (1):\penalty0
+  45--57, Mar 1993.
+\newblock URL \url{http://www.jstor.org/stable/3315657}.
+
+\bibitem[Michaud(1989)]{michaud1989markowitz}
+Richard~O. Michaud.
+\newblock The {Markowitz} optimization enigma: is `optimized' optimal?
+\newblock \emph{Financial Analysts Journal}, pages 31--42, 1989.
+\newblock URL
+  \url{http://newfrontieradvisors.com/Research/Articles/documents/markowitz-optimization-enigma-010189.pdf}.
+
+\bibitem[Paulsen and S\"{o}hl(2020)]{doi:10.1080/14697688.2020.1718746}
+Dirk Paulsen and Jakob S\"{o}hl.
+\newblock Noise fit, estimation error and a {S}harpe information criterion.
+\newblock \emph{Quantitative Finance}, 0\penalty0 (0):\penalty0 1--17, 2020.
+\newblock \doi{10.1080/14697688.2020.1718746}.
+\newblock URL \url{https://doi.org/10.1080/14697688.2020.1718746}.
+
+\bibitem[Pav(2013)]{pav2013markowitz}
+Steven~E. Pav.
+\newblock Asymptotic distribution of the {Markowitz} portfolio.
+\newblock Privately Published, 2013.
+\newblock URL \url{http://arxiv.org/abs/1312.0557}.
+
+\bibitem[Pav(2014)]{pav2014qbounds}
+Steven~E. Pav.
+\newblock Bounds on portfolio quality.
+\newblock Privately Published, 2014.
+\newblock URL \url{http://arxiv.org/abs/1409.5936}.
+
+\bibitem[Pav(2020)]{pav_the_book}
+Steven~E. Pav.
+\newblock Untitled book.
+\newblock Forthcoming, 2020.
+
+\end{thebibliography}
