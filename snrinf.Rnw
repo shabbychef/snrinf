@@ -530,8 +530,7 @@ via the connection to Hotelling's $T^2$, little is known about performing
 inference on the \txtSNR achieved by the \txtMP.
 Paulsen and S\"{o}hl described the \emph{Sharpe Ratio Information Criterion} (SRIC), 
 which is an approximately unbiased estimator for this quantity.  \cite{doi:10.1080/14697688.2020.1718746}
-Some asymptotic confidence intervals have also been described, but these
-require unreasonably large sample sizes. \cite{pav2013markowitz}
+%Some asymptotic confidence intervals have also been described, but these require unreasonably large sample sizes. \cite{pav2013markowitz}
 Here we fill this gap, describing confidence intervals very similar
 to the SRIC and using the same approximation.
 Practical construction of these bounds requires one to estimate the population
@@ -953,7 +952,7 @@ In practice this bound seems to give slightly less conservative coverage than
 the joint bound described above.
 It is not clear how to find a coverage guarantee for this bound.
 The quantities \ssrsqopt and \psnr[a] are not independent, 
-and their asymptotic correlation is $\bigo{\ssiz^{-\halff}}$, which is only slowly shrinking. \cite{pav2013markowitz}
+and their asymptotic correlation is $\bigo{\ssiz^{-\halff}}$, which is only slowly shrinking. \cite{pav_the_book} %\cite{pav2013markowitz}
 
 %\begin{example}[Feasible CI Coverage]%FOLDUP
 \paragraph{Feasible CI Coverage}
