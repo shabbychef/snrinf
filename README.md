@@ -7,10 +7,10 @@ This repo holds the code to rebuild the paper, ["Inference on Achieved Signal No
 
 You can build the paper yourself locally on your computer via `knitr` and `R`. This will require
 the following packages:
-`knitr`, `devtools`, `future.apply`, `dplyr`, `ggplot2`, `knitr`, `SharpeR`, `tidyr`, 
-and `aqfb.data`, which is available from github via
+`knitr`, `remotes`, `future.apply`, `dplyr`, `ggplot2`, `viridis`, `knitr`, `SharpeR`, `tidyr`, `xtable`, `future.apply`,
+and `tsrsa`, which is available from github via
 ```r
-install_github("shabbychef/aqfb_data")
+remotes::install_github("shabbychef/tsrsa/rpkg")
 ```
 Then you can build via
 ```r

@@ -146,6 +146,7 @@ opts_chunk$set(fig.pos='h')
 options(width=64,digits=3)
 opts_chunk$set(size="small")
 opts_chunk$set(tidy=TRUE,tidy.opts=list(width.cutoff=50,keep.blank.line=TRUE))
+
 @
 %UNFOLD
 
@@ -153,6 +154,41 @@ opts_chunk$set(tidy=TRUE,tidy.opts=list(width.cutoff=50,keep.blank.line=TRUE))
 prty <- function(x,...) { prettyNum(x,big.mark=',',...) }
 # easier to define this.
 finish_plot <- function(x) { x }
+
+suppressMessages({
+  library(dplyr)
+  library(tidyr)
+  library(tibble)
+  library(ggplot2)
+  library(future.apply)
+})
+workers <- 16L
+
+theme_set(theme_minimal(base_size=12))
+theme_update(legend.position="bottom")
+
+if (require(viridis,quietly=TRUE)) {
+  scale_colour_discrete <- function(...) {
+    require(viridis,quietly=TRUE)
+    scale_color_viridis(discrete=TRUE,end=0.85,option='D',...)
+  }
+  scale_fill_discrete <- function(...) {
+    require(viridis,quietly=TRUE)
+    scale_fill_viridis(discrete=TRUE,end=0.85,option='D',...)
+  }
+  # wait, can I also default for continuous cases?
+  scale_colour_continuous <- function(...) {
+    require(viridis,quietly=TRUE)
+    scale_color_viridis(discrete=FALSE,end=0.85,option='D',...)
+  }
+  scale_fill_continuous <- function(...) {
+    require(viridis,quietly=TRUE)
+    scale_fill_viridis(discrete=FALSE,end=0.85,option='D',...)
+  }
+}
+
+
+
 @
     
 % SYMPY preamble%FOLDUP
@@ -695,7 +731,7 @@ onesim <- function(pzeta,n,p) {
 }
 # do that many times.
 repsim <- function(nrep,zetas,n,p) {
-  foo <- future_replicate(nrep,onesim(pzeta=zetas,n,p))
+  foo <- future_replicate(nrep,onesim(pzeta=zetas,n,p),future.seed=TRUE)
   baz <- aperm(foo,c(1,3,2))
   dim(baz) <- c(nrep * length(zetas),dim(foo)[2])
   colnames(baz) <- colnames(foo)
@@ -712,28 +748,28 @@ params <- tidyr::crossing(tibble::tibble(n=round(100*2^(-1:10))),
   filter(n > 10 * p) %>%
   filter(n < 20000 * p)
 
-# this good?
+
+# do not use multisession!
 # 100K takes maybe 3 minutes?
-# 250K takes 8 minutes on my 8 core desktop
-# 500K takes 15.5 minutes on my 8 core desktop
+# 1e6 tkes 378 seconds with 20 cores.
 nrep <- 1000000L
 
-plan(multiprocess)
+plan(multicore, gc = TRUE, workers = workers)
 set.seed(2356)
-system.time({
+#system.time({
 results <- params %>%
   group_by(n,p) %>%
     summarize(sims=list(repsim(nrep=nrep,zetas=zeta,n=n,p=p))) %>%
   ungroup() %>%
   tidyr::unnest()
-})
+#})
 plan(sequential)
 @
 Before proceeding, we check whether use of \apxref{perfect_cov}
 leads to a degradation in coverage of a confidence interval implied by \ineqnref{psnr_ci_bound}.
 We draw \ssiz days of returns from the $\nstrat$-variate normal distribution.
 For a fixed value of \psnropt, we perform 
-$\Sexpr{nrep}$ simulations of computing $\psnr[a]$ and \ssrsqopt, computing a
+$\Sexpr{prty(nrep)}$ simulations of computing $\psnr[a]$ and \ssrsqopt, computing a
 one-sided confidence bound and measuring the empirical rate of type I errors.
 We then let \ssiz vary from \Sexpr{min(params$n)} to $\Sexpr{prty(max(params$n))}$ days; 
 we let \nstrat vary from \Sexpr{min(params$p)} to \Sexpr{max(params$p)};
@@ -876,9 +912,10 @@ where $\ncfcdf{x}{\nctdf[1],\nctdf[2]}{\ncfp}$ is the CDF of the non-central
 non-centrality parameter \ncfp and $\nctdf[1]$ and $\nctdf[2]$ degrees of freedom.
 This method requires computational inversion of the CDF function. 
 Then compute
+% 2FIX: do I want the \le \psnr in here?
 $$
 c = \max \wrapBraces{\left. \chisqqnt{1-\wrapNeParens{1-q}\typeI}{\nstrat,
-\frac{\ssiz\psnr^2}{4}} - \frac{\ssiz\psnr^2}{4} \right|  0 \le \psnr[u]}.
+\frac{\ssiz\psnr^2}{4}} - \frac{\ssiz\psnr^2}{4} \right|  0 \le \psnr \le \psnr[u]}.
 $$
 The bound $\ssropt - \frac{c}{\ssiz\ssropt}$ then should
 have type I rate at most \typeI.
@@ -921,7 +958,7 @@ and their asymptotic correlation is $\bigo{\ssiz^{-\halff}}$, which is only slow
 %\begin{example}[Feasible CI Coverage]%FOLDUP
 \paragraph{Feasible CI Coverage}
 %\label{example:64cb27b2-e7d9-4e38-968e-0d6cbf4a2f63}
-<<'feasible_ci_sims',dependson=c('badci_collect_sims'),results='hide'>>=
+<<'feasible_ci_sims',dependson=c('badci_collect_sims','setup'),results='hide'>>=
 typeI <- 0.05
 qval <- 0.25
 
@@ -973,7 +1010,7 @@ iry_bound <- function(ssrsqopts,ssiz,nstrat,alpha=0.05,q=0.5,type=c('delta','wor
 }
 
 #system.time({
-  plan(multiprocess)
+  plan(multicore, gc = TRUE, workers = workers)
   # wow, slow.
   nures <- results %>%
     group_by(n,p) %>%
@@ -1299,7 +1336,7 @@ onesim <- function(pzeta,n,p) {
 }
 # do that many times.
 repsim <- function(nrep,zetas,n,p) {
-  foo <- future_replicate(nrep,onesim(pzeta=zetas,n,p))
+  foo <- future_replicate(nrep,onesim(pzeta=zetas,n,p),future.seed=TRUE)
   baz <- aperm(foo,c(1,3,2))
   dim(baz) <- c(nrep * length(zetas),dim(foo)[2])
   colnames(baz) <- colnames(foo)
@@ -1318,9 +1355,9 @@ params <- tidyr::crossing(tibble::tibble(n=round(100*2^(-1:10))),
 
 # this good?
 # 100K takes maybe 3 minutes?
-nrep <- 100000L
+nrep <- 1000000L
 
-plan(multiprocess)
+plan(multicore, gc = TRUE, workers = workers)
 set.seed(2356)
 system.time({
 hejresults <- params %>%
@@ -1406,7 +1443,7 @@ print(finish_plot(ph))
 rm(cires)
 @
 
-<<'feasible_hejci_sims',dependson=c('hejci_collect_sims'),results='hide'>>=
+<<'feasible_hejci_sims',dependson=c('hejci_collect_sims','setup'),results='hide'>>=
 typeI <- 0.05
 qval <- 0.25
 
@@ -1455,7 +1492,7 @@ ary_bound <- function(hejssrsqopts,subssrsqopts,ssiz,nstrat,nstrathej=nstrat/2,a
 }
 
 #system.time({
-  plan(multiprocess)
+  plan(multicore, gc = TRUE, workers = workers)
   # wow, slow.
   hejnures <- hejresults %>%
     group_by(n,p) %>%
@@ -1520,6 +1557,11 @@ print(finish_plot(ph))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Examples}%FOLDUP
 
+<<'aqfb_data'>>=
+# if you do not have this, do 
+# remotes::install_github('shabbychef/tsrsa/rpkg")
+library(tsrsa)
+@
 
 %\begin{example}[Fama French Four Factors, Confidence Intervals]%FOLDUP
 %\index{Fama French 4 Factor returns}
@@ -1530,7 +1572,7 @@ suppressMessages({
 	library(dplyr)
 	library(xts)
 	library(SharpeR)
-	library(aqfb.data)
+	library(tsrsa)
 })
 data(mff4)
 sdat <- mff4[,! colnames(mff4) %in% c("RF")]
@@ -1588,7 +1630,115 @@ By comparison, via the connection to the \flaw{} distribution,
 we compute $\Sexpr{100*(1-typeI)}\%$ confidence intervals on \psnropt as
 $\ccinterval{\Sexpr{qlo}}{\Sexpr{qhi}}\,\moto{-\halff}$.
 %\end{example}%UNFOLD
+%\begin{example}[FF CI with hedge]%FOLDUP
+<<'example:73d3308a-7c58-44af-967d-25b279ab570c',results='asis',dependson=c('aqfb_data')>>=
+suppressMessages({
+	library(dplyr)
+	library(xts)
+	library(SharpeR)
+	library(tsrsa)
+	library(xtable)
+})
+# 19e0bbad#FOLDUP
+snrfunc <- function(mp,svmu,svsig) { as.numeric(svmu %*% mp / sqrt(t(mp) %*% svsig %*% mp)) }
 
+data(mff4)
+sdat <- mff4[,! colnames(mff4) %in% c("RF")]
+hejG <- diag(4)[which(grepl('Mkt',colnames(sdat))),,drop=FALSE]
+
+TEO <- time(mff4)
+TEO.i <- TEO[1]
+TEO.f <- TEO[length(TEO)]
+ssiz <- nrow(sdat)
+nstrat <- ncol(sdat)
+nstrathej <- nrow(hejG)
+
+rfr <- 0.25
+Rbuj <- 1.5
+drag <- rfr/Rbuj
+
+svsig <- cov(sdat)
+svmu  <- colMeans(sdat)
+txtmp <- solve(svsig,svmu)
+
+gsmu <- hejG %*% t(t(svmu))
+gssig <- hejG %*% svsig %*% t(hejG)
+gtxtmp <- t(hejG) %*% solve(gssig,gsmu)
+
+porto <- txtmp - gtxtmp
+cons <- as.numeric(Rbuj / sqrt(t(porto) %*% (svsig %*% porto)))
+rownames(porto) <- rownames(svsig) 
+sportwopt <- cons * porto
+delsropt <- snrfunc(sportwopt,svmu,svsig)
+unsropt <- snrfunc(txtmp,svmu,svsig)
+Gsropt <- snrfunc(gtxtmp,svmu,svsig)
+
+# save for later
+example_19e0 <- list()
+example_19e0$delsropt <- delsropt
+example_19e0$unsropt <- unsropt
+example_19e0$Gsropt <- Gsropt
+example_19e0$ssiz <- ssiz
+example_19e0$nstrat <- nstrat
+example_19e0$nstrathej <- nstrathej
+#UNFOLD
+alp <- 0.05
+# from bb7c5
+Ffoo <- function(zval,fval,ssiz,df1,df2) {
+	pf(fval,df1=df1,df2=df2,ncp=ssiz*zval^2)
+}
+qlim <- function(ssrsqopt,ssiz,nstrat,df1=nstrat,df2=ssiz-nstrat,lvl=0.025) {
+	fval <- (ssiz/(ssiz-1)) * (df2/df1) * ssrsqopt
+	ofunc <- function(z) { lvl - Ffoo(z,fval,ssiz=ssiz,df1=df1,df2=df2) }
+	if (ofunc(0) > 0) { return(0) }
+	zval <- uniroot(ofunc,lower=0,upper=10)$root
+	return(zval)
+}
+# 8443aaf1#FOLDUP
+# use this:
+example_19e0 <- within(example_19e0,{ 
+  alp <- alp
+	df1 <- nstrat - nstrathej
+	df2 <- ssiz - nstrat 
+	denot <- (1 + ssiz * Gsropt^2 / (ssiz-1))
+	#qlo <- denot * qlim(delsropt^2,ssiz,nstrat,df1=df1,df2=df2,lvl=1-alp/2)
+	#qhi <- denot * qlim(delsropt^2,ssiz,nstrat,df1=df1,df2=df2,lvl=alp/2)
+	qlo <- denot * qlim(delsropt^2,ssiz,nstrat,df1=df1,df2=df2,lvl=1-alp)
+})
+#UNFOLD
+
+# now this:
+example_19e0 <- within(example_19e0,{ 
+  # make ub via delta_2
+	df2 <- ssiz - nstrat
+  wrinkle <- (1 + (ssiz/ssiz-1)*Gsropt^2)
+  # already computed delta2
+	delta0 <- ((df2 - 2) / (ssiz-1)) * delsropt^2 - ((nstrat-nstrathej)/ssiz) * wrinkle
+	delta2 <- pmax(delta0,(2/(nstrat-nstrathej+2))*((df2-2)/(ssiz-1))*delsropt^2)
+  ub <- sqrt(delta2)
+  cons <- qchisq(1-typeI,df=nstrat-nstrathej,ncp=ssiz*ub*ub/4) - ssiz*ub*ub/4
+  ssropt <- delsropt
+  hejlobound <- ssropt - cons / (ssiz*ssropt)
+})
+@
+
+Next we consider the imposition of a constraint that the portfolio should be ``hedged against the Market''.
+This corresponds to $\nstrathej=1$ and \hejG is the row of the identity matrix corresponding to the Market factor.
+We compute
+$$
+\ssrsqopt=\Sexpr{example_19e0$unsropt^2}\,\moto{-1},\quad
+\ssrsqoptG{\hejG}=\Sexpr{example_19e0$Gsropt^2}\,\moto{-1},\quad
+\Hejssrsqopt{\hejG}=\Sexpr{example_19e0$delsropt^2}\,\moto{-1}.
+$$
+With $\ssiz=\Sexpr{example_19e0$ssiz}, \nstrat=\Sexpr{example_19e0$nstrat}$, we 
+compute the three KRS estimators of \Hejpsnrsqopt{\hejG}, which all take the same value,
+$\delta_0=\delta_1=\delta_2=\Sexpr{example_19e0$delta0}\moto{-1}.$
+From this we compute a one-sided $\Sexpr{100*(1-alp)}\%$ confidence bound on 
+%$\pql{\sportwoptHej{\hejG}}$ 
+\psnr[a]
+to be 
+$\cointerval{\Sexpr{example_19e0$hejlobound}}{\infty}\,\moto{-\halff}$.
+%\end{example}%UNFOLD
 
 %UNFOLD
 
