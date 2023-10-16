@@ -57,6 +57,7 @@
 %\VignetteKeyword{Markowitz}
 %\VignettePackage{MarkowitzR}
 
+\batchmode
 % front matter%FOLDUP
 \usepackage[hyphens]{url}
 \usepackage{amsmath}
@@ -85,7 +86,8 @@
 % see http://tex.stackexchange.com/a/3034/2530
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 \usepackage{hyperref}
-\usepackage[square,numbers]{natbib}
+%\usepackage[square,numbers]{natbib}
+\usepackage{apacite}
 %\usepackage[authoryear]{natbib}
 %\usepackage[iso]{datetime}
 %\usepackage{datetime}
@@ -114,6 +116,9 @@
 
 %compactitem and such:
 \usepackage[newitem,newenum,increaseonly]{paralist}
+\usepackage{totcount}
+\regtotcounter{figure}
+\regtotcounter{table}
 
 \makeatletter
 \makeatother
@@ -422,7 +427,10 @@
 \begin{document}
 
 \title{Inference on Achieved Signal Noise Ratio}
-\author{Steven E. Pav \thanks{\email{steven@gilgamath.com}
+\author{Steven E. Pav \thanks{Gilgamath Consulting.\\
+\email{steven@gilgamath.com}\\
+2132 15th Ave.\\
+San Francisco, CA 94116\\
 The code to build this document is available at
 \href{http://www.github.com/shabbychef/snrinf}{\normalfont\texttt{www.github.com/shabbychef/snrinf}}.
 This revision was built from commit \texttt{\gitHash} of that repo.
@@ -431,6 +439,11 @@ This revision was built from commit \texttt{\gitHash} of that repo.
 
 \maketitle
 %UNFOLD
+
+Paper has \total{figure} figures, \total{table} tables, and approximately 
+\input{snrinf.count} words.
+
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}%FOLDUP
@@ -442,6 +455,16 @@ Testing indicates the procedure is somewhat conservative, but
 otherwise works well for reasonable values of sample and asset universe sizes.
 We adapt the procedure to deal with generalizations of the portfolio optimization problem.
 \end{abstract}%UNFOLD
+
+Keywords: Sharpe Ratio, Markowitz Portfolio, Portfolio Inference.\\
+
+Key Messages:
+\begin{compactenum}
+\item An method to infer the true Sharpe ratio of the Markowitz portfolio is given.
+\item The bound is found to give near nominal coverage for sufficient data.
+\item The bound is adapted to the case of hedged portfolios.
+\end{compactenum}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}%FOLDUP
@@ -663,7 +686,7 @@ approximation $\svsig\approx\pvsig$ is close enough for purposes of inference.
 
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
-\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfbadci_ci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nstrat. Type I rates are plotted versus $\ssiz/\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. }\label{fig:badci_ci_plots}
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfbadci_ci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$, for multivariate normal returns]{The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$, for multivariate normal returns. }\label{fig:badci_ci_plots}
 \end{figure}
 
 \end{knitrout}
@@ -774,7 +797,7 @@ that seems like an unlikely problem in practice.
 %
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
-\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_ci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nlatf. The $y$ axis is drawn in square root scale to show detail. }\label{fig:feasible_ci_plots}
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_ci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$, for multivariate normal returns]{The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$, for multivariate normal returns.}\label{fig:feasible_ci_plots}
 \end{figure}
 
 \end{knitrout}
@@ -1015,7 +1038,7 @@ Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\n
 
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
-\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfhejci_plots-1} \caption{The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for the hedged portfolio problem.  We set $\nstrathej=\nstrat/2$ and take $\pvmu\propto\vone$. The SNR in the facet titles refers to $\sqrt{\Hejpsnrsqopt{\hejG}}$. }\label{fig:hejci_plots}
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinfhejci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for the hedged portfolio problem]{The empirical type I rate, over 1,000,000 simulations, of a one-sided confidence bound for $\psnr_{a}$ are shown for the hedged portfolio problem.}\label{fig:hejci_plots}
 \end{figure}
 
 \end{knitrout}
@@ -1032,7 +1055,7 @@ and both bounds are anti-conservative when $\ssiz/\nstrat$ is not sufficiently l
 %
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{figure}[h]
-\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_hejci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$]{The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$. The daily returns are drawn from multivariate normal distribution with varying \psnropt, \ssiz, and \nlatf. The $y$ axis is drawn in square root scale to show detail. }\label{fig:feasible_hejci_plots}
+\includegraphics[width=0.975\textwidth,height=0.4875\textwidth]{figure/snrinffeasible_hejci_plots-1} \caption[The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$, for multivariate normal returns]{The empirical type I rate, over 1,000,000 simulations, of two feasible one-sided confidence bounds for $\psnr_{a}$ are shown for a nominal type I rate of $0.05$, for multivariate normal returns.}\label{fig:feasible_hejci_plots}
 \end{figure}
 
 \end{knitrout}
@@ -1056,7 +1079,7 @@ We consider a portfolio constructed on the `Market', size (SMB), value (HML)
 and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
 with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
 The set consists of $\ssiz=1128\,\moto{}$ of data, from 
-1927 through 2020.917. 
+Jan 1927 through Dec 2020. 
 We observe $\ssrsqopt=0.095\,\moto{-1}$.
 %We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
 From this we compute $\delta_2 = 0.091\,\moto{-1}$.
@@ -1106,11 +1129,20 @@ conditional expectation models.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % bibliography%FOLDUP
-\bibliographystyle{plainnat}
+\bibliographystyle{apacite}
 %\bibliography{SharpeR}
 \bibliography{snrinf}
 %UNFOLD
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix%FOLDUP
+
+\section{Declaration of Interests}
+
+The authors report no conflicts of interest.
+The authors alone are responsible for the content and writing of the paper.
+
+%UNFOLD
 \end{document}
 %for vim modeline: (do not edit)
 % vim:fdm=marker:fmr=FOLDUP,UNFOLD:cms=%%s:syn=rnoweb:ft=rnoweb:et:nu:tw=131

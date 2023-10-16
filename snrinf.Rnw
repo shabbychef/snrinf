@@ -7,6 +7,7 @@
 %\VignetteKeyword{Markowitz}
 %\VignettePackage{MarkowitzR}
 
+\batchmode
 % front matter%FOLDUP
 \usepackage[hyphens]{url}
 \usepackage{amsmath}
@@ -35,7 +36,8 @@
 % see http://tex.stackexchange.com/a/3034/2530
 \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
 \usepackage{hyperref}
-\usepackage[square,numbers]{natbib}
+%\usepackage[square,numbers]{natbib}
+\usepackage{apacite}
 %\usepackage[authoryear]{natbib}
 %\usepackage[iso]{datetime}
 %\usepackage{datetime}
@@ -67,6 +69,9 @@ gitsha <- system("git rev-parse HEAD", intern=TRUE)
 
 %compactitem and such:
 \usepackage[newitem,newenum,increaseonly]{paralist}
+\usepackage{totcount}
+\regtotcounter{figure}
+\regtotcounter{table}
 
 \makeatletter
 \makeatother
@@ -482,7 +487,10 @@ if (require(viridis,quietly=TRUE)) {
 \begin{document}
 
 \title{Inference on Achieved Signal Noise Ratio}
-\author{Steven E. Pav \thanks{\email{steven@gilgamath.com}
+\author{Steven E. Pav \thanks{Gilgamath Consulting.\\
+\email{steven@gilgamath.com}\\
+2132 15th Ave.\\
+San Francisco, CA 94116\\
 The code to build this document is available at
 \href{http://www.github.com/shabbychef/snrinf}{\normalfont\texttt{www.github.com/shabbychef/snrinf}}.
 This revision was built from commit \texttt{\gitHash} of that repo.
@@ -491,6 +499,11 @@ This revision was built from commit \texttt{\gitHash} of that repo.
 
 \maketitle
 %UNFOLD
+
+Paper has \total{figure} figures, \total{table} tables, and approximately 
+\input{snrinf.count} words.
+
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}%FOLDUP
@@ -502,6 +515,16 @@ Testing indicates the procedure is somewhat conservative, but
 otherwise works well for reasonable values of sample and asset universe sizes.
 We adapt the procedure to deal with generalizations of the portfolio optimization problem.
 \end{abstract}%UNFOLD
+
+Keywords: Sharpe Ratio, Markowitz Portfolio, Portfolio Inference.\\
+
+Key Messages:
+\begin{compactenum}
+\item An method to infer the true Sharpe ratio of the Markowitz portfolio is given.
+\item The bound is found to give near nominal coverage for sufficient data.
+\item The bound is adapted to the case of hedged portfolios.
+\end{compactenum}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}%FOLDUP
@@ -835,10 +858,16 @@ cires <- results %>%
 fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of a one-sided confidence bound for $\\psnr_{a}$ are shown ",
                   "for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nstrat. ",
                   "Type I rates are plotted versus $\\ssiz/\\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. ")
-									#"The confidence intervals generally fail to achieve the nominal rate except for unrealistically large values of \\ssiz. ")
+
+# one sentence only:
+fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of a one-sided confidence bound for $\\psnr_{a}$ are shown ",
+                  "for a nominal type I rate of $",typeI,"$, for multivariate normal returns. ")
 
 # plot CIs:
 library(ggplot2)
+theme_set(theme_minimal(base_size=12))
+theme_update(legend.position="bottom")
+
 ph <- cires %>%
   tidyr::gather(key=type,value=type1,matches('^type1_')) %>%
 	mutate(type=case_when(.$type=='type1_add' ~ 'difference',
@@ -864,7 +893,7 @@ ph <- cires %>%
        shape=expression(k),
        #color='CI Bound',shape='CI Bound',
        title='Coverage of CIs on achieved SNR of the Markowitz portfolio\nGaussian returns, using clairvoyance.')
-print(finish_plot(ph))
+print(ph)
 rm(cires)
 @
 In \figref{badci_ci_plots} we plot the empirical type I rate at the nominal
@@ -1043,8 +1072,18 @@ fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, o
                   "for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nlatf. ",
                   "The $y$ axis is drawn in square root scale to show detail. ")
 
+
+# one sentence only:
+fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of two feasible one-sided confidence bounds for $\\psnr_{a}$ are shown ",
+                  "for a nominal type I rate of $",typeI,"$, for multivariate normal returns.")
+
+
+
 # plot CIs:
 library(ggplot2)
+theme_set(theme_minimal(base_size=12))
+theme_update(legend.position="bottom")
+
 ph <- nures %>%
   mutate(zyr=signif(pzeta * sqrt(ope),digits=2)) %>%
   rename(`annualized SNR`=zyr) %>%
@@ -1066,8 +1105,9 @@ ph <- nures %>%
        y='empirical type I rates at nominal 0.05 level',
        color=expression(k),
        linetype='CI Bound',shape='CI Bound',
-       title='Coverage of CIs on achieved SNR of the Markowitz portfolio\nGaussian returns, feasible CI')
-print(finish_plot(ph))
+       title='Coverage of CIs on achieved SNR of the Markowitz portfolio\nGaussian returns, feasible CI',
+       caption='The y axis is in square root scale to show detail.')
+print(ph)
 @
 %\end{example}%UNFOLD
 
@@ -1410,8 +1450,15 @@ fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, o
                   "for the hedged portfolio problem.  We set $\\nstrathej=\\nstrat/2$ and take $\\pvmu\\propto\\vone$. ",
                   "The SNR in the facet titles refers to $\\sqrt{\\Hejpsnrsqopt{\\hejG}}$. ")
 
+# one sentence only:
+fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of a one-sided confidence bound for $\\psnr_{a}$ are shown ",
+                  "for the hedged portfolio problem.")
+
 # plot CIs:
 library(ggplot2)
+theme_set(theme_minimal(base_size=12))
+theme_update(legend.position="bottom")
+
 ph <- cires %>%
   tidyr::gather(key=type,value=type1,matches('^type1_')) %>%
 	mutate(type=case_when(.$type=='type1_add' ~ 'difference',
@@ -1438,7 +1485,7 @@ ph <- cires %>%
        shape=expression(k),
        #color='CI Bound',shape='CI Bound',
        title='Coverage of CIs on achieved SNR of the hedged Markowitz portfolio\nGaussian returns, using clairvoyance.')
-print(finish_plot(ph))
+print(ph)
 rm(cires)
 @
 
@@ -1520,8 +1567,16 @@ fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, o
                   "for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nlatf. ",
                   "The $y$ axis is drawn in square root scale to show detail. ")
 
+# one sentence only:
+fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of two feasible one-sided confidence bounds for $\\psnr_{a}$ are shown ",
+                  "for a nominal type I rate of $",typeI,"$, for multivariate normal returns.")
+
+
 # plot CIs:
 library(ggplot2)
+theme_set(theme_minimal(base_size=12))
+theme_update(legend.position="bottom")
+
 ph <- hejnures %>%
   mutate(zyr=signif(hejpzeta * sqrt(ope),digits=2)) %>%
   rename(`annualized SNR`=zyr) %>%
@@ -1544,8 +1599,9 @@ ph <- hejnures %>%
        y='empirical type I rates at nominal 0.05 level',
        color=expression(k),
        linetype='CI Bound',shape='CI Bound',
-       title='Coverage of CIs on achieved SNR of the hedged Markowitz portfolio\nGaussian returns, feasible CI')
-print(finish_plot(ph))
+       title='Coverage of CIs on achieved SNR of the hedged Markowitz portfolio\nGaussian returns, feasible CI',
+       caption='The y axis is in square root scale to show detail.')
+print(ph)
 @
 
 %UNFOLD
@@ -1757,11 +1813,20 @@ conditional expectation models.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % bibliography%FOLDUP
-\bibliographystyle{plainnat}
+\bibliographystyle{apacite}
 %\bibliography{SharpeR}
 \bibliography{snrinf}
 %UNFOLD
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix%FOLDUP
+
+\section{Declaration of Interests}
+
+The authors report no conflicts of interest.
+The authors alone are responsible for the content and writing of the paper.
+
+%UNFOLD
 \end{document}
 %for vim modeline: (do not edit)
 % vim:fdm=marker:fmr=FOLDUP,UNFOLD:cms=%%s:syn=rnoweb:ft=rnoweb:et:nu:tw=131
