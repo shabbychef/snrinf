@@ -1824,6 +1824,7 @@ conditional expectation models.
 
 \section{Declaration of Interests}
 
+No funding was received.
 The authors report no conflicts of interest.
 The authors alone are responsible for the content and writing of the paper.
 
