@@ -1,11 +1,7 @@
 \documentclass[10pt,a4paper,english]{article}
 
-% now ignored, I think:
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Asymptotic Distribution of the Markowitz Portfolio}
-%\VignetteKeyword{Finance}
-%\VignetteKeyword{Markowitz}
-%\VignettePackage{MarkowitzR}
+% be quiet
+\batchmode
 
 % front matter%FOLDUP
 \usepackage[hyphens]{url}
@@ -163,6 +159,11 @@ suppressMessages({
   library(future.apply)
 })
 workers <- 16L
+@
+<<'plot_funcs',include=FALSE,cache=FALSE>>=
+suppressMessages({
+  library(ggplot2)
+})
 
 theme_set(theme_minimal(base_size=12))
 theme_update(legend.position="bottom")
@@ -831,7 +832,7 @@ cires <- results %>%
   rename(`annualized SNR`=zyr) 
 })
 @
-<<'badci_ci_plots',dependson=c('badci_collect_sims'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
+<<'badci_ci_plots',dependson=c('badci_collect_sims','plot_funcs'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
 fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of a one-sided confidence bound for $\\psnr_{a}$ are shown ",
                   "for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nstrat. ",
                   "Type I rates are plotted versus $\\ssiz/\\nstrat$ to indicate the requisite aspect ratio to achieve near nominal coverage. ")
@@ -1038,7 +1039,7 @@ It is not clear how the coverage will behave for larger $\ssiz/\nstrat$, though
 that seems like an unlikely problem in practice.
 %in the previous example.
 %
-<<'feasible_ci_plots',dependson=c('feasible_ci_sims'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
+<<'feasible_ci_plots',dependson=c('feasible_ci_sims','plot_funcs'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
 fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of two feasible one-sided confidence bounds for $\\psnr_{a}$ are shown ",
                   "for a nominal type I rate of $",typeI,"$. The daily returns are drawn from multivariate normal distribution with varying \\psnropt, \\ssiz, and \\nlatf. ",
                   "The $y$ axis is drawn in square root scale to show detail. ")
@@ -1405,7 +1406,7 @@ over the $\Sexpr{prty(nrep)}$ simulations, which we plot versus $\ssiz/\nstrat$ 
 Again we see that the nominal type I rate is nearly achieved when $\ssiz > 100\nstrat$ or so.
 % more here: this is not the end all simulation of course.
 
-<<'hejci_plots',dependson=c('hejci_collect_sims'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
+<<'hejci_plots',dependson=c('hejci_collect_sims','plot_funcs'),fig.width=cfg_width,fig.height=cfg_height,out.width=cot_width,out.height=cot_height,fig.cap=fig_cap>>=
 fig_cap <- paste0("The empirical type I rate, over ",prty(nrep)," simulations, of a one-sided confidence bound for $\\psnr_{a}$ are shown ",
                   "for the hedged portfolio problem.  We set $\\nstrathej=\\nstrat/2$ and take $\\pvmu\\propto\\vone$. ",
                   "The SNR in the facet titles refers to $\\sqrt{\\Hejpsnrsqopt{\\hejG}}$. ")
