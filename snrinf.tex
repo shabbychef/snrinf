@@ -13,10 +13,10 @@
 
 \definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
 \newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
 \newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
 \newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
 \newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
 \newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
 \newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
@@ -50,12 +50,8 @@
 
 \usepackage{alltt}
 
-% now ignored, I think:
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Asymptotic Distribution of the Markowitz Portfolio}
-%\VignetteKeyword{Finance}
-%\VignetteKeyword{Markowitz}
-%\VignettePackage{MarkowitzR}
+% be quiet
+\batchmode
 
 % front matter%FOLDUP
 \usepackage[hyphens]{url}
@@ -92,7 +88,7 @@
 %\usepackage{gitinfo2}
 % make that static for arxiv
 
-\providecommand{\gitHash}{9efd11fa3926fd7ca92654884ffb44b78425da79}
+\providecommand{\gitHash}{598ae2ee0b894d0c1e2971c65578662fe6bfb34b}
 
 %%http://choorucode.com/2010/05/05/how-to-add-draft-watermark-in-latex/
 %\usepackage{draftwatermark}
@@ -127,6 +123,7 @@
 
 
 %UNFOLD
+
 
 
     
@@ -1055,17 +1052,17 @@ and both bounds are anti-conservative when $\ssiz/\nstrat$ is not sufficiently l
 We consider a portfolio constructed on the `Market', size (SMB), value (HML)
 and momentum (HMD) portfolios described by Fama and French, \emph{inter alia},
 with data compiled and published by Kenneth French.  \cite{Fama_French_1992,Carhart_1997,french_data_library}
-The set consists of $\ssiz=1128\,\moto{}$ of data, from 
-1927 through 2020.917. 
+The set consists of $\ssiz=1187\,\moto{}$ of data, from 
+Jan 1927 through Nov 2025. 
 We observe $\ssrsqopt=0.095\,\moto{-1}$.
 %We consider a portfolio on the returns of the Market, SMB, HML and UMD portfolios introduced in \exampleref{ff4_rets}.
 From this we compute $\delta_2 = 0.091\,\moto{-1}$.
 Plugging in $\sqrt{\delta_2}$ for \psnropt 
 we compute a two-sided $95\%$ confidence bound on \psnr[a] as 
-$\ccinterval{0.23}{0.347}\,\moto{-\halff}$.
+$\ccinterval{0.232}{0.347}\,\moto{-\halff}$.
 By comparison, via the connection to the \flaw{} distribution,
 we compute $95\%$ confidence intervals on \psnropt as
-$\ccinterval{0.243}{0.363}\,\moto{-\halff}$.
+$\ccinterval{0.245}{0.362}\,\moto{-\halff}$.
 %\end{example}%UNFOLD
 %\begin{example}[FF CI with hedge]%FOLDUP
 
@@ -1075,12 +1072,12 @@ This corresponds to $\nstrathej=1$ and \hejG is the row of the identity matrix c
 We compute
 $$
 \ssrsqopt=0.095\,\moto{-1},\quad
-\ssrsqoptG{\hejG}=0.031\,\moto{-1},\quad
-\Hejssrsqopt{\hejG}=0.063\,\moto{-1}.
+\ssrsqoptG{\hejG}=0.033\,\moto{-1},\quad
+\Hejssrsqopt{\hejG}=0.062\,\moto{-1}.
 $$
-With $\ssiz=1128, \nstrat=4$, we 
+With $\ssiz=1187, \nstrat=4$, we 
 compute the three KRS estimators of \Hejpsnrsqopt{\hejG}, which all take the same value,
-$\delta_0=\delta_1=\delta_2=0.06\moto{-1}.$
+$\delta_0=\delta_1=\delta_2=0.059\moto{-1}.$
 From this we compute a one-sided $95\%$ confidence bound on 
 %$\pql{\sportwoptHej{\hejG}}$ 
 \psnr[a]
