@@ -613,38 +613,36 @@ We note that for Gaussian returns, we can write
   %\svmu \sim \normlaw{\pvmu,\oneby{\ssiz}\pvsig}.
 \end{equation*}
 where $\vect{z} \sim\normlaw{\vzero,\eye}.$
-Thus
+Let $b$ be some constant we will tune later.
+Then 
 \begin{align*}
-  \ssrsqopt - \psnr[a]\ssropt 
+  \ssrsqopt - 2b\psnr[a]\ssropt 
   & \approx 
-  \qiform{\pvsig}{\svmu} - \tr{\pvmu}\minv{\pvsig}\svmu,\\
+  \qiform{\pvsig}{\svmu} - 2b\tr{\pvmu}\minv{\pvsig}\svmu,\\
   &=
-  \tr{\wrapParens{\svmu-\pvmu}}\minv{\pvsig}\svmu,\\
+  \tr{\wrapParens{\svmu-2b\pvmu}}\minv{\pvsig}\svmu,\\
+  &=
+  \tr{\wrapParens{\svmu-b\pvmu}}\minv{\pvsig}\wrapParens{\svmu-b\pvmu} - b^2\tr{\pvmu}\minv{\pvsig}\pvmu,\\
+  &=
+  \tr{\wrapParens{\wrapParens{1-b}\pvmu + \oneby{\sqrt{\ssiz}}\chol{\pvsig}\vect{z}}} \minv{\pvsig}
+  {\wrapParens{\wrapParens{1-b}\pvmu + \oneby{\sqrt{\ssiz}}\chol{\pvsig}\vect{z}}}
+  - b^2\tr{\pvmu}\minv{\pvsig}\pvmu,\\
+  &=
+  \oneby{\ssiz}\tr{\wrapParens{\wrapParens{1-b}{\sqrt{\ssiz}}\pvmu + \chol{\pvsig}\vect{z}}} \minv{\pvsig}
+  {\wrapParens{\wrapParens{1-b}{\sqrt{\ssiz}}\pvmu + \chol{\pvsig}\vect{z}}}
+  - b^2\tr{\pvmu}\minv{\pvsig}\pvmu,\\
   &=
   \oneby{\ssiz}
-  \tr{\vect{z}}\trchol{\pvsig}
-  \minv{\pvsig}
-  \wrapParens{\sqrt{\ssiz}\pvmu + \chol{\pvsig}\vect{z}},\\
-  &=
-  \oneby{\ssiz}
-  \tr{\vect{z}}
-  \wrapParens{\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}},\\
-  &=
-  \oneby{\ssiz}
-  \tr{\wrapParens{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z} - \half\sqrt{\ssiz}\ichol{\pvsig}\pvmu}}
-     \wrapParens{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z} + \half\sqrt{\ssiz}\ichol{\pvsig}\pvmu},\\
-  &=
-  \oneby{\ssiz}\wrapParens{
-    \norm{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu + \vect{z}}^2
-    - \norm{\half\sqrt{\ssiz}\ichol{\pvsig}\pvmu}^2},\\
-  &\sim
-  \oneby{\ssiz}\wrapParens{\chisqlaw{\nstrat,\frac{\ssiz\psnrsqopt}{4}} - \frac{\ssiz\psnrsqopt}{4}}.
+  \chisqlaw{\nstrat, \ssiz\wrapParens{1-b}^2\psnrsqopt} - b^2\psnrsqopt,
 \end{align*}%
+where $\chisqlaw{\nstrat, \nctp}$ is a non-central chi-square random variable with $\nstrat$ degrees of freedom
+and non-centrality parameter $\nctp$.
 
-Now because 
+Now note that 
 $$
-\psnr[a] \le \ssropt - \frac{c}{\ssiz\ssropt} 
-  \Leftrightarrow c \le \ssiz \wrapParens{\ssrsqopt - \psnr[a]\ssropt},
+c \le \ssiz \wrapParens{\ssrsqopt + b^2\psnrsqopt- 2b\psnr[a]\ssropt}
+\Leftrightarrow 
+\psnr[a] \le \oneby{2b}\wrapBracks{\ssropt + \frac{b^2\psnrsqopt}{\ssropt}} - \frac{c}{2b\ssiz\ssropt}.
 $$
 %Thus $\ichol{\pvsig}\svmu \sim
 %\normlaw{\ichol{\pvsig}\pvmu,\oneby{\ssiz}\eye},$ where $\ichol{\pvsig}$ is the
@@ -689,12 +687,22 @@ $$
   %-\frac{\ssiz\psnrsqopt}{4} 
   %+ \sum_{2 \le i \le \nstrat}z_i^2.
 %\end{align*}
-If we want this condition to hold with probability \typeI we should set
+This condition will hold with probability \typeI if we set
 \begin{equation}
-\cono[\typeI] = {\chisqqnt{1-\typeI}{\nstrat, \frac{\ssiz\psnrsqopt}{4}} - \frac{\ssiz\psnrsqopt}{4}},
+  \cono[\typeI] = \chisqqnt{1-\typeI}{\nstrat, \ssiz\wrapParens{1-b}^2\psnrsqopt},
 \end{equation}
-where \chisqqnt{q}{\df,\nctp} is the $q$ quantile of the non-central chi-square distribution
+where \chisqqnt{q}{\df, \nctp} is the $q$ quantile of the non-central chi-square distribution
 with \df degrees of freedom and non-centrality parameter \nctp.
+Because our bound depends on the unobserved \psnrsqopt, we optimistically set it to \ssrsqopt and arrive
+at the confidence bound of
+\begin{align}
+  \psnr[a] 
+  &\le \frac{1 + b^2}{2b} \ssropt - \frac{\chisqqnt{1-\typeI}{\nstrat, \ssiz\wrapParens{1-b}^2\psnrsqopt}}{2b\ssiz\ssropt},\\
+  &= \ssropt + \frac{\ssiz\wrapParens{1-b}^2\ssrsqopt - {\chisqqnt{1-\typeI}{\nstrat, \ssiz\wrapParens{1-b}^2\psnrsqopt}}}{2b\ssiz\ssropt},
+\end{align}
+which holds approximately with probability \typeI.
+In what follows we set $b = 1/2$, as it gives the closest to nominal coverage, but this is not well understood.
+
 
 \paragraph{Checking coverage}
 
@@ -804,6 +812,9 @@ system.time({
   # wow, slow.
   qalpha <- qnorm(typeI)
 
+bval <- 0.500
+omb <- 1 - bval
+
 foores <- results %>%
   distinct(n,pzeta,p) %>%
   #mutate(bit1 = (kurty*pzeta^2 + 1) * (1 - p),
@@ -813,7 +824,10 @@ foores <- results %>%
   #mutate(kurty=kurty) %>%
   #mutate(lam1=pzeta*sqrt((2+3*(kurty-1))/(4*n)),
          #lamp=sqrt(1 + kurty*pzeta^2)/sqrt(n)) %>%
-  mutate(cons = qchisq(1-typeI,df=p,ncp=n*pzeta*pzeta/4) - n*pzeta*pzeta/4) 
+  #mutate(cons = qchisq(1-typeI,df=p,ncp=n*pzeta*pzeta/4) - n*pzeta*pzeta/4) 
+  #mutate(cons = qchisq(1-typeI,df=p)/2)
+  mutate(ncpval=n*omb*omb*pzeta*pzeta) %>%
+  mutate(cons = (qchisq(1-typeI,df=p,ncp=ncpval) - ncpval) / (2*bval))
 
 cires <- results %>%
   left_join(foores,by=c('pzeta','p','n')) %>%
